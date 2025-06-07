@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DrakarVpn.API.Controllers;
 
+[Route("api/[controller]")]
 public class UsersController : WrapperController
 {
     private readonly IUserService userService;

@@ -11,6 +11,8 @@ public class DrakarVpnDbContext : IdentityDbContext
     }
 
     public DbSet<AppUser> Users { get; set; }
+    public DbSet<Tariff> Tariffs { get; set; }
+
 
 
 }

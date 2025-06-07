@@ -1,8 +1,11 @@
 ﻿using DrakarVpn.Core.AbstractsRepositories.Auth;
+using DrakarVpn.Core.AbstractsRepositories.Tariffs;
 using DrakarVpn.Core.AbstractsRepositories.Users;
 using DrakarVpn.Core.AbstractsServices.Auth;
+using DrakarVpn.Core.AbstractsServices.Tariffs;
 using DrakarVpn.Core.AbstractsServices.Users;
 using DrakarVpn.Core.Services.Auth;
+using DrakarVpn.Core.Services.Tariffs;
 using DrakarVpn.Core.Services.Users;
 using DrakarVpn.Infrastructure.Repositories;
 
@@ -14,6 +17,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ITariffService, TariffService>();
 
         return services;
     }
@@ -22,6 +26,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITariffRepository, TariffRepository>();
 
         return services;
     }

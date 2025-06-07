@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DrakarVpn.API.Controllers;
 
+[Route("api/[controller]")]
 public class AuthController : WrapperController
 {
     private readonly IAuthService service;
@@ -14,7 +15,7 @@ public class AuthController : WrapperController
         this.service = service;
     }
 
-    [HttpPost]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterRequestDto registerRequestDto
     )
@@ -47,7 +48,7 @@ public class AuthController : WrapperController
 
     }
 
-    [HttpPost]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login(
         [FromBody] LoginRequestDto loginRequestDto
     )

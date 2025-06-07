@@ -6,8 +6,6 @@ using System.Net;
 namespace DrakarVpn.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[Action]")]
-
 public class WrapperController : ControllerBase
 {
     protected Response<T> CreateSuccessResponse<T>(T result, HttpStatusCode status = HttpStatusCode.OK)
