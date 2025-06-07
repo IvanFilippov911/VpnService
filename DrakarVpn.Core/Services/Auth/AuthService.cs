@@ -1,14 +1,14 @@
-﻿using DrakarVpn.Core.AbstractsRepositories;
-using DrakarVpn.Core.AbstractsServices;
+﻿using DrakarVpn.Core.AbstractsRepositories.Auth;
+using DrakarVpn.Core.AbstractsServices.Auth;
 using DrakarVpn.Core.Auth;
 using DrakarVpn.Core.Utils;
 using DrakarVpn.Domain.Entities;
-using DrakarVpn.Domain.ModelDto;
+using DrakarVpn.Domain.ModelDto.Auth;
 using DrakarVpn.Shared.Constants;
 using DrakarVpn.Shared.Constants.Errors;
 using Microsoft.AspNetCore.Identity;
 
-namespace DrakarVpn.Core.Services;
+namespace DrakarVpn.Core.Services.Auth;
 
 public class AuthService : IAuthService
 {

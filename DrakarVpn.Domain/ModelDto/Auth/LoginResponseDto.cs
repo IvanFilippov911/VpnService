@@ -1,6 +1,4 @@
-﻿
-
-namespace DrakarVpn.Domain.ModelDto;
+﻿namespace DrakarVpn.Domain.ModelDto.Auth;
 
 public class LoginResponseDto
 {

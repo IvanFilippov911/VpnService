@@ -1,7 +1,7 @@
 ﻿using DrakarVpn.Core.Utils;
-using DrakarVpn.Domain.ModelDto;
+using DrakarVpn.Domain.ModelDto.Auth;
 
-namespace DrakarVpn.Core.AbstractsServices;
+namespace DrakarVpn.Core.AbstractsServices.Auth;
 
 public interface IAuthService
 {

@@ -1,7 +1,7 @@
 ﻿using DrakarVpn.Domain.Entities;
 using DrakarVpn.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using DrakarVpn.Core.AbstractsRepositories;
+using DrakarVpn.Core.AbstractsRepositories.Auth;
 
 namespace DrakarVpn.Infrastructure.Repositories;
 

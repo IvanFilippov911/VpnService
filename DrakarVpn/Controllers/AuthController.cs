@@ -1,5 +1,5 @@
-﻿using DrakarVpn.Core.AbstractsServices;
-using DrakarVpn.Domain.ModelDto;
+﻿using DrakarVpn.Core.AbstractsServices.Auth;
+using DrakarVpn.Domain.ModelDto.Auth;
 using DrakarVpn.Shared.Constants.Errors;
 using Microsoft.AspNetCore.Mvc;
 

@@ -23,4 +23,8 @@ public static class AppErrors
 
     public static AppError Exception(string ex) =>
         new AppError("EXCEPTION", $"Что-то поломалось: {ex}", HttpStatusCode.BadRequest);
+
+    public static readonly AppError InvalidId =
+    new AppError("INVALID_ID", "Некорректный Id", HttpStatusCode.BadRequest);
+
 }
