@@ -1,0 +1,6 @@
+@DrakarVpn_HostAddress = http://localhost:5087
+
+GET {{DrakarVpn_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

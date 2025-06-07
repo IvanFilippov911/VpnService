@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.API", "DrakarVpn\DrakarVpn.API.csproj", "{23A1B719-20CF-4018-9B98-E3BC855E1E42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.Core", "DrakarVpn.Core\DrakarVpn.Core.csproj", "{3F462493-3D05-492D-95C3-B51CED307924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.Infrastructure", "DrakarVpn.Infrastructure\DrakarVpn.Infrastructure.csproj", "{805C9F0E-2D78-4848-8229-C535339C6DFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.Domain", "DrakarVpn.Domain\DrakarVpn.Domain.csproj", "{CE40D893-76E1-4C95-A35F-AFB9057A0848}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.Shared", "DrakarVpn.Shared\DrakarVpn.Shared.csproj", "{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23A1B719-20CF-4018-9B98-E3BC855E1E42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23A1B719-20CF-4018-9B98-E3BC855E1E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23A1B719-20CF-4018-9B98-E3BC855E1E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23A1B719-20CF-4018-9B98-E3BC855E1E42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F462493-3D05-492D-95C3-B51CED307924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F462493-3D05-492D-95C3-B51CED307924}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F462493-3D05-492D-95C3-B51CED307924}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F462493-3D05-492D-95C3-B51CED307924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{805C9F0E-2D78-4848-8229-C535339C6DFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{805C9F0E-2D78-4848-8229-C535339C6DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{805C9F0E-2D78-4848-8229-C535339C6DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{805C9F0E-2D78-4848-8229-C535339C6DFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE40D893-76E1-4C95-A35F-AFB9057A0848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE40D893-76E1-4C95-A35F-AFB9057A0848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE40D893-76E1-4C95-A35F-AFB9057A0848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE40D893-76E1-4C95-A35F-AFB9057A0848}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
