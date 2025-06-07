@@ -1,3 +1,4 @@
+using DrakarVpn.API.Middleware;
 using DrakarVpn.API.Settings.Extensions;
 
 namespace DrakarVpn;
@@ -17,6 +18,8 @@ public class Program
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddApplicationServices();
+        services.AddInfrastructureServices();
 
         var app = builder.Build();
 
@@ -28,13 +31,11 @@ public class Program
             app.UseSwaggerUI();
         }
 
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
-
         app.MapControllers();
-
         app.Run();
     }
 }

@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DrakarVpn.Domain\DrakarVpn.Domain.csproj" />
+	  <ProjectReference Include="..\DrakarVpn.Core\DrakarVpn.Core.csproj" />
   </ItemGroup>
 
 </Project>

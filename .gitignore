@@ -58,6 +58,7 @@ ehthumbs.db
 # Folder config file
 Desktop.ini
 
+.vs/
 # VS Code directories
 .vscode/
 
