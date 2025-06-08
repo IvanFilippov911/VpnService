@@ -2,6 +2,7 @@
 using DrakarVpn.Shared.Constants.Errors;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace DrakarVpn.API.Controllers;
 
@@ -40,6 +41,18 @@ public class WrapperController : ControllerBase
             ErrorMessages = new List<string> { appError.Message }
         };
     }
+
+    protected string GetCurrentUserId()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new Exception("UserId is missing in token"); 
+        }
+
+        return userId;
+    }
+
 
 }
 

@@ -10,4 +10,6 @@ public class Tariff
     public decimal Price { get; set; }
     public int DurationInDays { get; set; }
     public string Limitations { get; set; }
+
+    public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
 }

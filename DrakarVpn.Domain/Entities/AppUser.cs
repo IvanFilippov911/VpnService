@@ -15,6 +15,8 @@ public class AppUser : IdentityUser
     public bool IsBlocked { get; set; } = false;       
     public bool IsVerified { get; set; } = false;     
 
-    public string? AdminNote { get; set; }             
+    public string? AdminNote { get; set; }
+
+    public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
 
 }

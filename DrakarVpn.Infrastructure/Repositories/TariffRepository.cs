@@ -32,8 +32,15 @@ public class TariffRepository : ITariffRepository
 
     public async Task UpdateTariffAsync(Tariff tariff)
     {
-        dbContext.Tariffs.Update(tariff);
-        await dbContext.SaveChangesAsync();
+        await dbContext.Tariffs
+            .Where(t => t.Id == tariff.Id)
+            .ExecuteUpdateAsync(i => i
+                .SetProperty(t => t.Name, t => tariff.Name)
+                .SetProperty(t => t.Description, t => tariff.Description)
+                .SetProperty(t => t.Price, t => tariff.Price)
+                .SetProperty(t => t.DurationInDays, t => tariff.DurationInDays)
+                .SetProperty(t => t.Limitations, t => tariff.Limitations)
+            );
     }
 
     public async Task DeleteTariffAsync(Tariff tariff)
