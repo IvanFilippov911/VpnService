@@ -1,4 +1,5 @@
 ﻿using DrakarVpn.Domain.Entities;
+using DrakarVpn.Domain.ModelDto.Tariffs;
 
 
 namespace DrakarVpn.Core.AbstractsRepositories.Tariffs;
@@ -10,4 +11,6 @@ public interface ITariffRepository
     Task AddTariffAsync(Tariff tariff);
     Task UpdateTariffAsync(Tariff tariff);
     Task DeleteTariffAsync(Tariff tariff);
+    Task<List<Tariff>> FilterTariffsAsync(TariffFilterDto filter);
+
 }

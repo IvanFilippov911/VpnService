@@ -1,4 +1,5 @@
-﻿using DrakarVpn.Core.AbstractsRepositories.Users;
+﻿using AutoMapper;
+using DrakarVpn.Core.AbstractsRepositories.Users;
 using DrakarVpn.Core.AbstractsServices.Users;
 using DrakarVpn.Domain.ModelDto.Users;
 
@@ -7,27 +8,18 @@ namespace DrakarVpn.Core.Services.Users;
 public class UserService : IUserService
 {
     private readonly IUserRepository userRepository;
+    private readonly IMapper mapper;
 
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepository userRepository, IMapper mapper)
     {
         this.userRepository = userRepository;
+        this.mapper = mapper;
     }
 
     public async Task<List<UserListItemDto>> GetAllUsersAsync()
     {
         var users = await userRepository.GetAllUsersAsync();
-
-        return users.Select(u => new UserListItemDto
-        {
-            UserId = u.Id,
-            Email = u.Email ?? "",
-            CurrentTariffName = "", 
-            Country = u.Country ?? "",
-            SubscriptionExpiresAt = null, 
-            RegistrationDate = u.CreatedAt,
-            LastActionDate = u.LastLoginAt,
-            AccountStatus = u.IsBlocked ? "Suspended" : (u.IsVerified ? "Active" : "Pending")
-        }).ToList();
+        return mapper.Map<List<UserListItemDto>>(users);
     }
 
     public async Task<UserDetailsDto?> GetUserByIdAsync(string userId)
@@ -37,33 +29,14 @@ public class UserService : IUserService
         if (user == null)
             return null;
 
-        return new UserDetailsDto
-        {
-            UserId = user.Id,
-            FullName = user.FullName ?? "",
-            Email = user.Email ?? "",
-            PhoneNumber = user.PhoneNumber ?? "",
-            RegistrationDate = user.CreatedAt,
-            LastActionDate = user.LastLoginAt,
-
-            DownloadsCount = 0, 
-            SessionsCount = 0,
-            TrafficVolumeMb = 0,
-            LimitExceededCount = 0,
-
-            LastIpAddress = "", 
-            UserAgent = "",
-
-            VerificationStatus = user.IsVerified ? "Verified" : "Not Verified",
-            CurrentTariffName = "", 
-            Country = user.Country ?? "",
-            SubscriptionExpiresAt = null, 
-
-            LifetimeValue = 0, 
-            LastPaymentAmount = 0,
-            LastPaymentDate = null,
-
-            AdminNote = user.AdminNote ?? ""
-        };
+        var userDto = mapper.Map<UserDetailsDto>(user);
+        return userDto;
     }
+
+    public async Task<List<UserListItemDto>> FilterUsersAsync(UserFilterDto filter)
+    {
+        var users = await userRepository.FilterUsersAsync(filter);
+        return mapper.Map<List<UserListItemDto>>(users);
+    }
+
 }

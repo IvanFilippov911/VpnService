@@ -9,4 +9,6 @@ public interface ITariffService
     Task CreateTariffAsync(TariffCreateUpdateDto dto);
     Task UpdateTariffAsync(Guid tariffId, TariffCreateUpdateDto dto);
     Task<bool> DeleteTariffAsync(Guid tariffId);
+    Task<List<TariffDto>> FilterTariffsAsync(TariffFilterDto filter);
+
 }

@@ -36,7 +36,7 @@ public class TariffsController : WrapperController
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateTariff([FromBody] TariffCreateUpdateDto dto)
     {
         await tariffService.CreateTariffAsync(dto);
@@ -64,4 +64,13 @@ public class TariffsController : WrapperController
 
         return Ok(CreateSuccessResponse("Tariff deleted successfully"));
     }
+
+    [HttpGet("filter")]
+    //[Authorize(Roles = "Admin")]
+    public async Task<IActionResult> FilterTariffs([FromQuery] TariffFilterDto filter)
+    {
+        var tariffs = await tariffService.FilterTariffsAsync(filter);
+        return Ok(CreateSuccessResponse(tariffs));
+    }
+
 }

@@ -1,4 +1,5 @@
-﻿using DrakarVpn.Core.AbstractsRepositories.Tariffs;
+﻿using AutoMapper;
+using DrakarVpn.Core.AbstractsRepositories.Tariffs;
 using DrakarVpn.Core.AbstractsServices.Tariffs;
 using DrakarVpn.Domain.Entities;
 using DrakarVpn.Domain.ModelDto.Tariffs;
@@ -8,25 +9,18 @@ namespace DrakarVpn.Core.Services.Tariffs;
 public class TariffService : ITariffService
 {
     private readonly ITariffRepository tariffRepository;
+    private readonly IMapper mapper;
 
-    public TariffService(ITariffRepository tariffRepository)
+    public TariffService(ITariffRepository tariffRepository, IMapper mapper)
     {
         this.tariffRepository = tariffRepository;
+        this.mapper = mapper;
     }
 
     public async Task<List<TariffDto>> GetAllTariffsAsync()
     {
         var tariffs = await tariffRepository.GetAllTariffsAsync();
-
-        return tariffs.Select(t => new TariffDto
-        {
-            Id = t.Id,
-            Name = t.Name,
-            Description = t.Description,
-            Price = t.Price,
-            DurationInDays = t.DurationInDays,
-            Limitations = t.Limitations
-        }).ToList();
+        return mapper.Map<List<TariffDto>>(tariffs);
     }
 
     public async Task<TariffDto?> GetTariffByIdAsync(Guid tariffId)
@@ -34,15 +28,7 @@ public class TariffService : ITariffService
         var tariff = await tariffRepository.GetTariffByIdAsync(tariffId);
         if (tariff == null) return null;
 
-        return new TariffDto
-        {
-            Id = tariff.Id,
-            Name = tariff.Name,
-            Description = tariff.Description,
-            Price = tariff.Price,
-            DurationInDays = tariff.DurationInDays,
-            Limitations = tariff.Limitations
-        };
+        return mapper.Map<TariffDto>(tariff);
     }
 
     public async Task CreateTariffAsync(TariffCreateUpdateDto dto)
@@ -81,5 +67,11 @@ public class TariffService : ITariffService
 
         await tariffRepository.DeleteTariffAsync(existing);
         return true;
+    }
+
+    public async Task<List<TariffDto>> FilterTariffsAsync(TariffFilterDto filter)
+    {
+        var tariffs = await tariffRepository.FilterTariffsAsync(filter);
+        return mapper.Map<List<TariffDto>>(tariffs);
     }
 }

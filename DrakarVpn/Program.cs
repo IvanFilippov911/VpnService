@@ -1,5 +1,7 @@
 using DrakarVpn.API.Middleware;
 using DrakarVpn.API.Settings.Extensions;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 namespace DrakarVpn;
 
@@ -20,6 +22,9 @@ public class Program
         services.AddSwaggerGen();
         services.AddApplicationServices();
         services.AddInfrastructureServices();
+        services.AddApplicationMappings();
+
+
 
         var app = builder.Build();
 

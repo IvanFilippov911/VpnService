@@ -1,5 +1,7 @@
 ﻿using DrakarVpn.Core.AbstractsServices.Users;
+using DrakarVpn.Domain.ModelDto.Users;
 using DrakarVpn.Shared.Constants.Errors;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DrakarVpn.API.Controllers;
@@ -33,4 +35,13 @@ public class UsersController : WrapperController
 
         return Ok(CreateSuccessResponse(user));
     }
+
+    [HttpGet("filter")]
+    //[Authorize(Roles = "Admin")]
+    public async Task<IActionResult> FilterUsers([FromQuery] UserFilterDto filter)
+    {
+        var users = await userService.FilterUsersAsync(filter);
+        return Ok(CreateSuccessResponse(users));
+    }
+
 }
