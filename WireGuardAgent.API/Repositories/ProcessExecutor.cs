@@ -1,7 +1,7 @@
-﻿using DrakarVpn.Core.AbstractsRepositories.WireGuard;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using WireGuardAgent.API.AbstractsRepositories;
 
-namespace DrakarVpn.Core.Services.Configs;
+namespace WireGuardAgent.API.Repositories;
 
 public class ProcessExecutor : IProcessExecutor
 {
@@ -31,4 +31,3 @@ public class ProcessExecutor : IProcessExecutor
         }
     }
 }
-

@@ -1,10 +1,10 @@
-﻿using DrakarVpn.Core.AbstractsRepositories.WireGuard;
-using DrakarVpn.Core.AbstractsServices.Configs;
-using DrakarVpn.Domain.Models;
-using DrakarVpn.Domain.ModelsOptions;
+﻿using DrakarVpn.Domain.Models;
 using Microsoft.Extensions.Options;
+using WireGuardAgent.API.AbstractsRepositories;
+using WireGuardAgent.API.AbstractsServices;
+using WireGuardAgent.API.ModelOptions;
 
-namespace DrakarVpn.Core.Services.Configs;
+namespace WireGuardAgent.API.Services;
 
 public class WireGuardConfigService : IWireGuardConfigService
 {
@@ -19,12 +19,20 @@ public class WireGuardConfigService : IWireGuardConfigService
         this.fileSystem = fileSystem;
         this.processExecutor = processExecutor;
         configFilePath = options.Value.ConfigFilePath;
+
+        Console.WriteLine($"[WireGuardConfigService] Constructor: ConfigFilePath = {configFilePath}");
     }
 
     public List<WireGuardPeerInfo> GetCurrentPeers()
     {
         lock (fileLock)
         {
+            if (!fileSystem.FileExists(configFilePath))
+            {
+                Console.WriteLine($"[WireGuardConfigService] Config file not found: {configFilePath}");
+                return new List<WireGuardPeerInfo>();
+            }
+
             var lines = fileSystem.ReadAllLines(configFilePath);
             var peers = new List<WireGuardPeerInfo>();
 
@@ -56,6 +64,8 @@ public class WireGuardConfigService : IWireGuardConfigService
 
     public void AddPeer(WireGuardPeerInfo peerInfo)
     {
+        Console.WriteLine($"[WireGuardConfigService] Adding peer: PublicKey={peerInfo.PublicKey}, AllowedIp={peerInfo.AllowedIp}");
+
         if (string.IsNullOrWhiteSpace(peerInfo.PublicKey))
             throw new ArgumentException("PublicKey is required.", nameof(peerInfo));
 
@@ -65,8 +75,14 @@ public class WireGuardConfigService : IWireGuardConfigService
         lock (fileLock)
         {
             var existingPeers = GetCurrentPeers();
+
+            Console.WriteLine($"[WireGuardConfigService] Existing peers count: {existingPeers.Count}");
+
             if (existingPeers.Any(p => p.PublicKey == peerInfo.PublicKey))
+            {
+                Console.WriteLine($"[WireGuardConfigService] Peer with PublicKey {peerInfo.PublicKey} already exists — throwing exception.");
                 throw new InvalidOperationException($"Peer with PublicKey {peerInfo.PublicKey} already exists.");
+            }
 
             var peerBlock = new List<string>
             {
@@ -76,9 +92,16 @@ public class WireGuardConfigService : IWireGuardConfigService
                 $"AllowedIPs = {peerInfo.AllowedIp}"
             };
 
+            Console.WriteLine($"[WireGuardConfigService] Appending new peer block to {configFilePath}");
+
+            // Всегда просто Append → это правильно и безопасно
             fileSystem.AppendAllLines(configFilePath, peerBlock);
 
+            Console.WriteLine($"[WireGuardConfigService] Reloading WireGuard");
+
             ReloadWireGuard();
+
+            Console.WriteLine($"[WireGuardConfigService] Peer added successfully.");
         }
     }
 
@@ -86,6 +109,12 @@ public class WireGuardConfigService : IWireGuardConfigService
     {
         lock (fileLock)
         {
+            if (!fileSystem.FileExists(configFilePath))
+            {
+                Console.WriteLine($"[WireGuardConfigService] Config file not found when trying to remove peer: {configFilePath}");
+                return;
+            }
+
             var lines = fileSystem.ReadAllLines(configFilePath).ToList();
             var newLines = new List<string>();
 
@@ -106,7 +135,7 @@ public class WireGuardConfigService : IWireGuardConfigService
                     if (pk == publicKey)
                     {
                         skipBlock = true;
-                        continue; 
+                        continue;
                     }
                     else
                     {
@@ -129,6 +158,8 @@ public class WireGuardConfigService : IWireGuardConfigService
             }
 
             fileSystem.WriteAllLines(configFilePath, newLines);
+
+            Console.WriteLine($"[WireGuardConfigService] Reloading WireGuard after peer removal");
 
             ReloadWireGuard();
         }

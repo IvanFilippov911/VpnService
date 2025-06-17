@@ -63,4 +63,20 @@ public class UserRepository : IUserRepository
         
         return await query.AsNoTracking().ToListAsync();
     }
+
+    public async Task<bool> UpdateUserProfileAsync(string userId, UserProfileDto dto)
+    {
+        var result = await dbContext.Users
+            .Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(u => u.FullName, dto.FullName)
+                .SetProperty(u => u.Country, dto.Country)
+                .SetProperty(u => u.PhoneNumber, dto.PhoneNumber)
+                .SetProperty(u => u.Language, dto.Language)
+            );
+
+        return result > 0; 
+    }
+
+
 }

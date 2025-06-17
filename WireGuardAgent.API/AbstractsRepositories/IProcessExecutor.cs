@@ -1,8 +1,6 @@
-﻿namespace DrakarVpn.Core.AbstractsRepositories.WireGuard;
+﻿namespace WireGuardAgent.API.AbstractsRepositories;
 
 public interface IProcessExecutor
 {
     void Execute(string command, string args);
 }
-
-

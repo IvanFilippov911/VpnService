@@ -39,4 +39,15 @@ public class UserService : IUserService
         return mapper.Map<List<UserListItemDto>>(users);
     }
 
+    public async Task<UserProfileDto?> GetUserProfileAsync(string userId)
+    {
+        var user = await userRepository.GetUserByIdAsync(userId);
+        return user == null ? null : mapper.Map<UserProfileDto>(user);
+    }
+
+    public async Task<bool> UpdateUserProfileAsync(string userId, UserProfileDto dto)
+    {
+        return await userRepository.UpdateUserProfileAsync(userId, dto);
+    }
+
 }

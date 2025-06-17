@@ -28,5 +28,41 @@ public class UserProfile : Profile
             .ForMember(dest => dest.LimitExceededCount, opt => opt.MapFrom(_ => 0))
             .ForMember(dest => dest.LastIpAddress, opt => opt.MapFrom(_ => ""))
             .ForMember(dest => dest.UserAgent, opt => opt.MapFrom(_ => ""));
+
+        CreateMap<AppUser, UserProfileDto>()
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email ?? ""))
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName ?? ""))
+            .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country ?? ""))
+            .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber ?? ""))
+            .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.Language ?? "ru"));
+
+        
+        CreateMap<UserProfileDto, AppUser>()
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+            .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+            .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+            .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.Language))
+
+            .ForMember(dest => dest.Email, opt => opt.Ignore())
+            .ForMember(dest => dest.UserName, opt => opt.Ignore())
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.NormalizedEmail, opt => opt.Ignore())
+            .ForMember(dest => dest.NormalizedUserName, opt => opt.Ignore())
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+            .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore())
+            .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore())
+            .ForMember(dest => dest.PhoneNumberConfirmed, opt => opt.Ignore())
+            .ForMember(dest => dest.TwoFactorEnabled, opt => opt.Ignore())
+            .ForMember(dest => dest.LockoutEnabled, opt => opt.Ignore())
+            .ForMember(dest => dest.LockoutEnd, opt => opt.Ignore())
+            .ForMember(dest => dest.AccessFailedCount, opt => opt.Ignore())
+            .ForMember(dest => dest.EmailConfirmed, opt => opt.Ignore())
+            .ForMember(dest => dest.IsBlocked, opt => opt.Ignore())
+            .ForMember(dest => dest.IsVerified, opt => opt.Ignore())
+            .ForMember(dest => dest.AdminNote, opt => opt.Ignore())
+            .ForMember(dest => dest.LastLoginAt, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.Subscriptions, opt => opt.Ignore());
+
     }
 }

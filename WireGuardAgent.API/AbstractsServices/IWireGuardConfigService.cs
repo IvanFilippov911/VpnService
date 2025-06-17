@@ -1,6 +1,6 @@
 ﻿using DrakarVpn.Domain.Models;
 
-namespace DrakarVpn.Core.AbstractsServices.Configs;
+namespace WireGuardAgent.API.AbstractsServices;
 
 public interface IWireGuardConfigService
 {

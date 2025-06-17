@@ -24,9 +24,6 @@ public class Program
         services.AddApplicationMappings();
         builder.Services.AddWireGuardConfigServices(builder.Configuration);
 
-
-
-
         var app = builder.Build();
 
         await app.Services.InitializeRolesAsync();

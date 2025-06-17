@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.API", "DrakarVpn\DrakarVpn.API.csproj", "{23A1B719-20CF-4018-9B98-E3BC855E1E42}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.Domain", "DrakarVpn.Domain\DrakarVpn.Domain.csproj", "{CE40D893-76E1-4C95-A35F-AFB9057A0848}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.Shared", "DrakarVpn.Shared\DrakarVpn.Shared.csproj", "{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireGuardAgent.API", "WireGuardAgent.API\WireGuardAgent.API.csproj", "{858AF330-0365-4A4F-BDA1-76A9732C273F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A74CEC3-6A6A-46E3-B105-B84D50C3DF1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{858AF330-0365-4A4F-BDA1-76A9732C273F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858AF330-0365-4A4F-BDA1-76A9732C273F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858AF330-0365-4A4F-BDA1-76A9732C273F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858AF330-0365-4A4F-BDA1-76A9732C273F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

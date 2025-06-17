@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
-public class TariffsController : WrapperController
+public class TariffController : WrapperController
 {
     private readonly ITariffService tariffService;
 
-    public TariffsController(ITariffService tariffService)
+    public TariffController(ITariffService tariffService)
     {
         this.tariffService = tariffService;
     }
