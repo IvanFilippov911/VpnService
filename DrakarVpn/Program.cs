@@ -23,6 +23,7 @@ public class Program
         services.AddInfrastructureServices();
         services.AddApplicationMappings();
         builder.Services.AddWireGuardConfigServices(builder.Configuration);
+        builder.Services.AddBackgroundWorkers();
 
         var app = builder.Build();
 

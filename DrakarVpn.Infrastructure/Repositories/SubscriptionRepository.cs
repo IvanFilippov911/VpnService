@@ -46,4 +46,14 @@ public class SubscriptionRepository : ISubscriptionRepository
                 .SetProperty(s => s.IsActive, s => false)
             );
     }
+
+    public async Task SetAutoRenewStatusAsync(Guid subscriptionId, bool enable)
+    {
+        await dbContext.Subscriptions
+            .Where(s => s.Id == subscriptionId)
+            .ExecuteUpdateAsync(upd => upd
+                .SetProperty(s => s.IsAutoRenew, enable)
+            );
+    }
+
 }

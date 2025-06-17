@@ -9,5 +9,6 @@ public interface ISubscriptionRepository
     Task AddSubscriptionAsync(Subscription subscription);
     Task UpdateSubscriptionAsync(Subscription subscription);
     Task DeactivateSubscriptionAsync(Guid subscriptionId);
+    Task SetAutoRenewStatusAsync(Guid subscriptionId, bool enable);
 
 }

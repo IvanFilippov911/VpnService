@@ -40,4 +40,15 @@ public class SubscriptionController : WrapperController
         await subscriptionService.DeactivateMySubscriptionAsync(userId);
         return Ok(CreateSuccessResponse("Subscription deactivated successfully"));
     }
+
+    [Authorize]
+    [HttpPut("autorenew")]
+    public async Task<IActionResult> UpdateAutoRenewSetting([FromBody] UpdateAutoRenewDto dto)
+    {
+        var userId = GetCurrentUserId();
+        await subscriptionService.UpdateAutoRenewAsync(userId, dto.Enable);
+
+        return Ok(CreateSuccessResponse("Autorenewal setting updated"));
+    }
+
 }

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BackgroundWorkers\BackgroundWorkers.csproj" />
     <ProjectReference Include="..\DrakarVpn.Core\DrakarVpn.Core.csproj" />
     <ProjectReference Include="..\DrakarVpn.Infrastructure\DrakarVpn.Infrastructure.csproj" />
   </ItemGroup>

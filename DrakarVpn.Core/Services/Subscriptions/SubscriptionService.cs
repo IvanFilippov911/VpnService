@@ -23,7 +23,8 @@ public class SubscriptionService : ISubscriptionService
     public async Task<SubscriptionMyDto?> GetMySubscriptionAsync(string userId)
     {
         var subscription = await subscriptionRepository.GetActiveSubscriptionByUserIdAsync(userId);
-        if (subscription == null) return null;
+        if (subscription == null || subscription.ExpiresAt < DateTime.UtcNow)
+            return null;
 
         return mapper.Map<SubscriptionMyDto>(subscription);
     }
@@ -72,4 +73,13 @@ public class SubscriptionService : ISubscriptionService
             await subscriptionRepository.DeactivateSubscriptionAsync(existingSubscription.Id);
         }
     }
+
+    public async Task UpdateAutoRenewAsync(string userId, bool enable)
+    {
+        var sub = await subscriptionRepository.GetActiveSubscriptionByUserIdAsync(userId);
+        if (sub == null) throw new Exception("No active subscription");
+
+        await subscriptionRepository.SetAutoRenewStatusAsync(sub.Id, enable);
+    }
+
 }

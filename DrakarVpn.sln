@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrakarVpn.Shared", "DrakarV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireGuardAgent.API", "WireGuardAgent.API\WireGuardAgent.API.csproj", "{858AF330-0365-4A4F-BDA1-76A9732C273F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundWorkers", "BackgroundWorkers\BackgroundWorkers.csproj", "{BA74072E-959A-487E-AACB-1BD5E481C823}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{858AF330-0365-4A4F-BDA1-76A9732C273F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{858AF330-0365-4A4F-BDA1-76A9732C273F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{858AF330-0365-4A4F-BDA1-76A9732C273F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA74072E-959A-487E-AACB-1BD5E481C823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA74072E-959A-487E-AACB-1BD5E481C823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA74072E-959A-487E-AACB-1BD5E481C823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA74072E-959A-487E-AACB-1BD5E481C823}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
