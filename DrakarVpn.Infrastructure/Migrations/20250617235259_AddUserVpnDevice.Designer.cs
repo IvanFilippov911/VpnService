@@ -3,6 +3,7 @@ using System;
 using DrakarVpn.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DrakarVpn.Infrastructure.Migrations
 {
     [DbContext(typeof(DrakarVpnDbContext))]
-    partial class DrakarVpnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250617235259_AddUserVpnDevice")]
+    partial class AddUserVpnDevice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,12 +41,16 @@ namespace DrakarVpn.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("PrivateKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("PublicKey")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -97,8 +104,9 @@ namespace DrakarVpn.Infrastructure.Migrations
                     b.Property<int>("DurationInDays")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MaxDevices")
-                        .HasColumnType("integer");
+                    b.Property<string>("Limitations")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -132,9 +140,8 @@ namespace DrakarVpn.Infrastructure.Migrations
                     b.Property<Guid>("PeerId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

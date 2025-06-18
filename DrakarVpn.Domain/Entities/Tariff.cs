@@ -9,7 +9,7 @@ public class Tariff
     public string Description { get; set; }
     public decimal Price { get; set; }
     public int DurationInDays { get; set; }
-    public string Limitations { get; set; }
+    public int MaxDevices { get; set; }
 
     public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
 }

@@ -40,7 +40,7 @@ public class TariffService : ITariffService
             Description = dto.Description,
             Price = dto.Price,
             DurationInDays = dto.DurationInDays,
-            Limitations = dto.Limitations
+            MaxDevices = dto.MaxDevices
         };
 
         await tariffRepository.AddTariffAsync(tariff);
@@ -55,7 +55,7 @@ public class TariffService : ITariffService
         existing.Description = dto.Description;
         existing.Price = dto.Price;
         existing.DurationInDays = dto.DurationInDays;
-        existing.Limitations = dto.Limitations;
+        existing.MaxDevices = dto.MaxDevices;
 
         await tariffRepository.UpdateTariffAsync(existing);
     }

@@ -12,72 +12,61 @@ public class PeerService : IPeerService
     private readonly IWireGuardIpAllocator ipAllocator;
     private readonly IWireGuardManagementService wireGuardManagementService;
     private readonly IMapper mapper;
-    private readonly IWireGuardClientConfigGenerator configGenerator;
 
     public PeerService(
         IPeerRepository peerRepository,
         IWireGuardIpAllocator ipAllocator,
         IWireGuardManagementService wireGuardManagementService,
-        IMapper mapper,
-        IWireGuardClientConfigGenerator configGenerator)
+        IMapper mapper)
     {
         this.peerRepository = peerRepository;
         this.ipAllocator = ipAllocator;
         this.wireGuardManagementService = wireGuardManagementService;
         this.mapper = mapper;
-        this.configGenerator = configGenerator;
     }
 
-    public async Task<AddPeerResultDto> AddPeerAsync(Guid userId, string publicKey, string privateKey)
+    public async Task<PeerAllocationResult> AddPeerAsync(string userId, string publicKey)
+{
+    var assignedIp = await ipAllocator.AllocateNextIpAsync();
+
+    var wgPeerInfo = new WireGuardPeerInfo
     {
-        var existingPeer = await peerRepository.GetActivePeerByUserIdAsync(userId);
+        PublicKey = publicKey,
+        AllowedIp = assignedIp
+    };
 
-        if (existingPeer != null)
+    await using var tx = await peerRepository.BeginTransactionAsync();
+
+    try
+    {
+        await wireGuardManagementService.AddPeerAsync(wgPeerInfo);
+
+        var peer = new Peer
         {
-            throw new ApplicationException("User already has active VPN peer.");
-        }
-
-        var assignedIp = await ipAllocator.AllocateNextIpAsync();
-
-        var wgPeerInfo = new WireGuardPeerInfo
-        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
             PublicKey = publicKey,
-            AllowedIp = assignedIp
+            AssignedIP = assignedIp,
+            CreatedAt = DateTime.UtcNow,
+            IsActive = true
         };
 
-        await using var transaction = await peerRepository.BeginTransactionAsync();
+        await peerRepository.AddPeerAsync(peer);
+        await tx.CommitAsync();
 
-        try
+        return new PeerAllocationResult
         {
-            await wireGuardManagementService.AddPeerAsync(wgPeerInfo);
-
-            var peer = new Peer
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId,
-                PublicKey = publicKey,
-                PrivateKey = privateKey,
-                AssignedIP = assignedIp,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
-            };
-
-            await peerRepository.AddPeerAsync(peer);
-            await transaction.CommitAsync();
-            var clientConfig = configGenerator.GenerateClientConfig(wgPeerInfo);
-
-            return new AddPeerResultDto
-            {
-                Peer = mapper.Map<PeerResponseDto>(peer),
-                ClientConfig = clientConfig
-            };
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
+            PeerId = peer.Id,
+            AssignedIp = assignedIp
+        };
     }
+    catch
+    {
+        await tx.RollbackAsync();
+        throw;
+    }
+}
+
 
     public async Task RemovePeerByPeerIdAsync(Guid peerId)
     {
@@ -104,10 +93,10 @@ public class PeerService : IPeerService
         }
     }
 
-    public async Task<List<PeerResponseDto>> GetAllPeersAsync(bool onlyActive = false)
+    public async Task<List<PeerDto>> GetAllPeersAsync(bool onlyActive = false)
     {
         var peers = await peerRepository.GetAllPeersAsync(onlyActive);
-        return mapper.Map<List<PeerResponseDto>>(peers);
+        return mapper.Map<List<PeerDto>>(peers);
     }
 
     public async Task<List<WireGuardPeerInfo>> GetWireGuardPeersAsync()
@@ -115,9 +104,9 @@ public class PeerService : IPeerService
         return await wireGuardManagementService.GetPeersAsync();
     }
 
-    public async Task<List<PeerResponseDto>> GetPeersByFilterAsync(PeerFilterDto filter)
+    public async Task<List<PeerDto>> GetPeersByFilterAsync(PeerFilterDto filter)
     {
         var peers = await peerRepository.GetPeersByFilterAsync(filter);
-        return mapper.Map<List<PeerResponseDto>>(peers);
+        return mapper.Map<List<PeerDto>>(peers);
     }
 }

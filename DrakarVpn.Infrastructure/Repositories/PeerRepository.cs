@@ -16,7 +16,7 @@ public class PeerRepository : IPeerRepository
         this.dbContext = dbContext;
     }
 
-    public async Task<Peer?> GetActivePeerByUserIdAsync(Guid userId)
+    public async Task<Peer?> GetActivePeerByUserIdAsync(string userId)
     {
         return await dbContext.Peers
             .FirstOrDefaultAsync(p => p.UserId == userId && p.IsActive);
@@ -62,9 +62,9 @@ public class PeerRepository : IPeerRepository
             query = query.Where(p => p.IsActive == filter.IsActive.Value);
         }
 
-        if (filter.UserId.HasValue)
+        if (!string.IsNullOrWhiteSpace(filter.UserId))
         {
-            query = query.Where(p => p.UserId == filter.UserId.Value);
+            query = query.Where(p => p.UserId == filter.UserId);
         }
 
         if (!string.IsNullOrEmpty(filter.AssignedIp))

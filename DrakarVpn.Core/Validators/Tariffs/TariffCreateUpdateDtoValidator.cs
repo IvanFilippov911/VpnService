@@ -20,7 +20,9 @@ public class TariffCreateUpdateDtoValidator : AbstractValidator<TariffCreateUpda
         RuleFor(x => x.DurationInDays)
             .GreaterThan(0).WithMessage("Duration must be greater than 0 days.");
 
-        RuleFor(x => x.Limitations)
-            .MaximumLength(1000);
+        RuleFor(x => x.MaxDevices)
+            .InclusiveBetween(1, 50)
+            .WithMessage("The maximum number of devices should be from 1 to 50.");
+
     }
 }

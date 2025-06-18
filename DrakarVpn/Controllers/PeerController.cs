@@ -16,12 +16,11 @@ public class PeerController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddPeer([FromBody] AddPeerRequestDto request)
+    public async Task<IActionResult> AddPeer([FromBody] PeerAdminCreateDto request)
     {
-        var result = await peerService.AddPeerAsync(request.UserId, request.PublicKey, request.PrivateKey);
+        var result = await peerService.AddPeerAsync(request.UserId, request.PublicKey);
         return Ok(result);
     }
-
 
     [HttpDelete("{peerId}")]
     public async Task<IActionResult> RemovePeer(Guid peerId)
@@ -30,9 +29,7 @@ public class PeerController : ControllerBase
         return Ok();
     }
 
-
     [HttpGet]
-    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllPeers([FromQuery] bool onlyActive = false)
     {
         var peers = await peerService.GetAllPeersAsync(onlyActive);
@@ -52,8 +49,5 @@ public class PeerController : ControllerBase
         var peers = await peerService.GetWireGuardPeersAsync();
         return Ok(peers);
     }
-
-
-
 }
 

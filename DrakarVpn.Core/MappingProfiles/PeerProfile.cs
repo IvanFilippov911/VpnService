@@ -8,7 +8,7 @@ public class PeerProfile : Profile
 {
     public PeerProfile()
     {
-        CreateMap<Peer, PeerResponseDto>();
+        CreateMap<Peer, PeerDto>();
     }
 }
 

@@ -5,10 +5,10 @@ namespace DrakarVpn.Core.AbstractsServices.Peers;
 
 public interface IPeerService
 {
-    Task<AddPeerResultDto> AddPeerAsync(Guid userId, string publicKey, string privateKey);
-    Task<List<PeerResponseDto>> GetAllPeersAsync(bool onlyActive = false);
+    Task<PeerAllocationResult> AddPeerAsync(string userId, string publicKey);
+    Task<List<PeerDto>> GetAllPeersAsync(bool onlyActive = false);
     Task RemovePeerByPeerIdAsync(Guid peerId);
-    Task<List<PeerResponseDto>> GetPeersByFilterAsync(PeerFilterDto filter);
+    Task<List<PeerDto>> GetPeersByFilterAsync(PeerFilterDto filter);
     Task<List<WireGuardPeerInfo>> GetWireGuardPeersAsync();
 }
 

@@ -3,7 +3,7 @@
 public class PeerFilterDto
 {
     public bool? IsActive { get; set; }
-    public Guid? UserId { get; set; }
+    public string? UserId { get; set; }
     public string? AssignedIp { get; set; }
     public DateTime? CreatedAfter { get; set; }
     public DateTime? CreatedBefore { get; set; }

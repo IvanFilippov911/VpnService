@@ -40,7 +40,7 @@ public class TariffRepository : ITariffRepository
                 .SetProperty(t => t.Description, t => tariff.Description)
                 .SetProperty(t => t.Price, t => tariff.Price)
                 .SetProperty(t => t.DurationInDays, t => tariff.DurationInDays)
-                .SetProperty(t => t.Limitations, t => tariff.Limitations)
+                .SetProperty(t => t.MaxDevices, t => tariff.MaxDevices)
             );
     }
 

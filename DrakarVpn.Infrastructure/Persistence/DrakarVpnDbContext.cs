@@ -14,6 +14,8 @@ public class DrakarVpnDbContext : IdentityDbContext
     public DbSet<Tariff> Tariffs { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<Peer> Peers { get; set; } = null!;
+    public DbSet<UserVpnDevice> UserVpnDevices { get; set; }
+
 
 
 }

@@ -6,7 +6,7 @@ namespace DrakarVpn.Core.AbstractsRepositories.Peers;
 
 public interface IPeerRepository
 {
-    Task<Peer?> GetActivePeerByUserIdAsync(Guid userId);
+    Task<Peer?> GetActivePeerByUserIdAsync(string userId);
     Task AddPeerAsync(Peer peer);
     Task<List<Peer>> GetAllPeersAsync(bool onlyActive = false);
     Task<Peer?> GetPeerByIdAsync(Guid peerId);
