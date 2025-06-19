@@ -1,17 +1,22 @@
 ﻿using DrakarVpn.Core.AbstractsRepositories.Auth;
+using DrakarVpn.Core.AbstractsRepositories.Logging;
 using DrakarVpn.Core.AbstractsRepositories.Peers;
 using DrakarVpn.Core.AbstractsRepositories.Subscriptions;
 using DrakarVpn.Core.AbstractsRepositories.Tariffs;
 using DrakarVpn.Core.AbstractsRepositories.Users;
+using DrakarVpn.Core.AbstractsRepositories.VpnDevice;
 using DrakarVpn.Core.AbstractsServices.Auth;
 using DrakarVpn.Core.AbstractsServices.Peers;
 using DrakarVpn.Core.AbstractsServices.Subscriptions;
 using DrakarVpn.Core.AbstractsServices.Tariffs;
 using DrakarVpn.Core.AbstractsServices.Users;
+using DrakarVpn.Core.AbstractsServices.UserVpnDevice;
 using DrakarVpn.Core.Services.Auth;
+using DrakarVpn.Core.Services.Logging;
 using DrakarVpn.Core.Services.Subscriptions;
 using DrakarVpn.Core.Services.Tariffs;
 using DrakarVpn.Core.Services.Users;
+using DrakarVpn.Core.Services.UserVpnDevices;
 using DrakarVpn.Infrastructure.Repositories;
 using DrakarVpn.Infrastructure.Repositories.Subscriptions;
 
@@ -25,6 +30,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITariffService, TariffService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
+        services.AddScoped<IUserVpnDeviceService, UserVpnDeviceService>();
+        services.AddScoped<IMasterLogService, MasterLogService>();
 
         return services;
     }
@@ -37,6 +44,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
         services.AddScoped<IPeerRepository, PeerRepository>();
         services.AddScoped<IPeerService, PeerService>();
+        services.AddScoped<IUserVpnDeviceRepository, UserVpnDeviceRepository>();
+        services.AddScoped<IMongoLogRepository, MongoLogRepository>();
 
         return services;
     }

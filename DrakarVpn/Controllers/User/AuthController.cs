@@ -3,9 +3,9 @@ using DrakarVpn.Domain.ModelDto.Auth;
 using DrakarVpn.Shared.Constants.Errors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DrakarVpn.API.Controllers;
+namespace DrakarVpn.API.Controllers.User;
 
-[Route("api/[controller]")]
+[Route("api/user/[controller]")]
 public class AuthController : WrapperController
 {
     private readonly IAuthService service;
@@ -24,7 +24,7 @@ public class AuthController : WrapperController
         {
             return StatusCode((int)AppErrors.InvalidModel.StatusCode,
                 CreateErrorResponse<object>((
-                AppErrors.InvalidModel.StatusCode, 
+                AppErrors.InvalidModel.StatusCode,
                 new List<string> { AppErrors.InvalidModel.Message })));
         }
 
@@ -32,7 +32,7 @@ public class AuthController : WrapperController
         {
             return StatusCode((int)AppErrors.ObjectIsNull.StatusCode,
                 CreateErrorResponse<object>((
-                AppErrors.ObjectIsNull.StatusCode, 
+                AppErrors.ObjectIsNull.StatusCode,
                 new List<string> { AppErrors.ObjectIsNull.Message })));
         }
 

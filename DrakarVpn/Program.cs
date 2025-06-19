@@ -22,8 +22,9 @@ public class Program
         services.AddApplicationServices();
         services.AddInfrastructureServices();
         services.AddApplicationMappings();
-        builder.Services.AddWireGuardConfigServices(builder.Configuration);
-        builder.Services.AddBackgroundWorkers();
+        services.AddWireGuardConfigServices(builder.Configuration);
+        services.AddBackgroundWorkers();
+        services.AddMongoLogging(builder.Configuration);
 
         var app = builder.Build();
 

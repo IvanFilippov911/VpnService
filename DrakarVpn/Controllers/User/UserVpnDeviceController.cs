@@ -4,10 +4,10 @@ using DrakarVpn.Shared.Constants.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DrakarVpn.API.Controllers;
+namespace DrakarVpn.API.Controllers.User;
 
 [Authorize]
-[Route("api/vpn/devices")]
+[Route("api/user/devices")]
 public class UserVpnDeviceController : WrapperController
 {
     private readonly IUserVpnDeviceService deviceService;

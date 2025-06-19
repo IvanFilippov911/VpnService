@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
-namespace DrakarVpn.API.Controllers;
+namespace DrakarVpn.API.Controllers.User;
 
 [Authorize]
-[Route("api/[controller]")]
+[Route("api/user/[controller]")]
 public class SubscriptionController : WrapperController
 {
     private readonly ISubscriptionService subscriptionService;
