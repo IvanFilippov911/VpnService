@@ -11,7 +11,7 @@ public static class WireGuardAgentServiceExtensions
     public static IServiceCollection AddWireGuardAgentServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<WireGuardConfigOptions>(
-            configuration.GetSection("WireGuardConfig"));
+            configuration.GetSection("WireGuardConfigOptions"));
 
         services.AddSingleton<IFileSystem, FileSystem>();
         services.AddSingleton<IProcessExecutor, ProcessExecutor>();

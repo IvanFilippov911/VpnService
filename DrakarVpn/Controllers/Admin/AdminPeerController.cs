@@ -9,7 +9,7 @@ namespace DrakarVpn.API.Controllers.Admin;
 
 [ApiController]
 [Route("api/admin/vpn/peers")]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 [SetLogSource(SystemLogSource.Peer)]
 public class AdminPeerController : ControllerBase
 {

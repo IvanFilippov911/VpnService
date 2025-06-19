@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITariffService, TariffService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<IUserVpnDeviceService, UserVpnDeviceService>();
-        services.AddScoped<IMasterLogService, MasterLogService>();
+        services.AddSingleton<IMasterLogService, MasterLogService>();
 
         return services;
     }
@@ -46,7 +46,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPeerRepository, PeerRepository>();
         services.AddScoped<IPeerService, PeerService>();
         services.AddScoped<IUserVpnDeviceRepository, UserVpnDeviceRepository>();
-        services.AddScoped<IMongoLogRepository, MongoLogRepository>();
+        services.AddSingleton<IMongoLogRepository, MongoLogRepository>();
+
 
         return services;
     }

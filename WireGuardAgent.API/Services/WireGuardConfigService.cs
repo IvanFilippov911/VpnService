@@ -18,7 +18,7 @@ public class WireGuardConfigService : IWireGuardConfigService
     {
         this.fileSystem = fileSystem;
         this.processExecutor = processExecutor;
-        configFilePath = options.Value.ConfigFilePath;
+        configFilePath = "/etc/wireguard/wg0.conf";
 
         Console.WriteLine($"[WireGuardConfigService] Constructor: ConfigFilePath = {configFilePath}");
     }
