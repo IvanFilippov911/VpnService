@@ -2,6 +2,7 @@
 
 public enum SystemErrorCode
 {
+    UnhandledException,
     UnexpectedException,
     ExternalServiceUnavailable,
     NotFound,

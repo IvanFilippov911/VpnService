@@ -1,4 +1,5 @@
 ﻿using DrakarVpn.Core.AbstractsServices.Subscriptions;
+using DrakarVpn.Core.Services.Logging;
 using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Subscriptions;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ namespace DrakarVpn.API.Controllers.User;
 
 [Authorize]
 [Route("api/user/[controller]")]
+[SetLogSource(SystemLogSource.Subscription)]
 public class SubscriptionController : WrapperController
 {
     private readonly ISubscriptionService subscriptionService;
@@ -23,7 +25,7 @@ public class SubscriptionController : WrapperController
 
     [HttpGet("my")]
     public async Task<IActionResult> GetMySubscription()
-    {
+    {        
         var userId = GetCurrentUserId();
         var subscription = await subscriptionService.GetMySubscriptionAsync(userId);
         return Ok(CreateSuccessResponse(subscription));

@@ -1,4 +1,6 @@
 ﻿using DrakarVpn.Core.AbstractsServices.Peers;
+using DrakarVpn.Core.Services.Logging;
+using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Peers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,7 @@ namespace DrakarVpn.API.Controllers.Admin;
 [ApiController]
 [Route("api/admin/vpn/peers")]
 [Authorize(Roles = "Admin")]
+[SetLogSource(SystemLogSource.Peer)]
 public class AdminPeerController : ControllerBase
 {
     private readonly IPeerService peerService;

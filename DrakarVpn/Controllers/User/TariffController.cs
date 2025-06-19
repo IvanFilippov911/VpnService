@@ -1,9 +1,11 @@
 ﻿using DrakarVpn.API.Controllers;
 using DrakarVpn.Core.AbstractsServices.Tariffs;
-using DrakarVpn.Shared.Constants.Errors;
+using DrakarVpn.Core.Services.Logging;
+using DrakarVpn.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/user/[controller]")]
+[SetLogSource(SystemLogSource.Tariff)]
 public class TariffController : WrapperController
 {
     private readonly ITariffService tariffService;

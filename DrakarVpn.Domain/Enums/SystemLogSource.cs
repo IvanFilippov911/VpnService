@@ -1,6 +1,4 @@
-﻿
-
-namespace DrakarVpn.Domain.Enums;
+﻿namespace DrakarVpn.Domain.Enums;
 
 public enum SystemLogSource
 {
@@ -12,5 +10,6 @@ public enum SystemLogSource
     Admin,
     Peer,
     Middleware,
+    Logging,
     Unknown
 }

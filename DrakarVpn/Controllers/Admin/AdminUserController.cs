@@ -1,4 +1,6 @@
 ﻿using DrakarVpn.Core.AbstractsServices.Users;
+using DrakarVpn.Core.Services.Logging;
+using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Users;
 using DrakarVpn.Shared.Constants.Errors;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +11,7 @@ namespace DrakarVpn.API.Controllers.Admin;
 [Authorize(Roles = "Admin")]
 [Route("api/admin/users")]
 [ApiController]
+[SetLogSource(SystemLogSource.User)]
 public class AdminUserController : WrapperController
 {
     private readonly IUserService userService;

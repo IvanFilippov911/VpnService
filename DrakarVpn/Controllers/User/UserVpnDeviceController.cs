@@ -1,4 +1,5 @@
 ﻿using DrakarVpn.Core.AbstractsServices.UserVpnDevice;
+using DrakarVpn.Core.Services.Logging;
 using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.UserVpnDevices;
 using DrakarVpn.Shared.Constants.Errors;
@@ -9,6 +10,7 @@ namespace DrakarVpn.API.Controllers.User;
 
 [Authorize]
 [Route("api/user/devices")]
+[SetLogSource(SystemLogSource.Device)]
 public class UserVpnDeviceController : WrapperController
 {
     private readonly IUserVpnDeviceService deviceService;

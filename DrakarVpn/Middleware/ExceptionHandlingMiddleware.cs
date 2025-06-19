@@ -1,4 +1,6 @@
-﻿using DrakarVpn.Shared.Constants.Errors;
+﻿using DrakarVpn.Domain.Enums;
+using DrakarVpn.Shared.Constants.Errors;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace DrakarVpn.API.Middleware;
@@ -12,7 +14,7 @@ public class ExceptionHandlingMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, IMasterLogService logService)
     {
         try
         {
@@ -20,12 +22,30 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(context, ex);
+            await LogAndHandleExceptionAsync(context, ex, logService);
         }
     }
 
-    private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static async Task LogAndHandleExceptionAsync(HttpContext context, Exception exception, IMasterLogService logService)
     {
+        var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var ua = context.Request.Headers["User-Agent"].ToString();
+        var method = context.Request.Method;
+        var path = context.Request.Path;
+        var traceId = context.TraceIdentifier;
+        var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "unauthorized";
+
+        var source = context.Items["SystemLogSource"] as SystemLogSource? ?? SystemLogSource.Unknown;
+
+        var message = $"[{method}] {path} | TraceId: {traceId} | UserId: {userId} | IP: {ip} | UA: {ua} | Error: {exception.Message}";
+
+        await logService.LogSystemEventAsync(
+            source,
+            SystemErrorCode.UnhandledException,
+            message,
+            exception.StackTrace
+        );
+
         var appError = AppErrors.Exception(exception.Message);
 
         var response = new
@@ -38,9 +58,6 @@ public class ExceptionHandlingMiddleware
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)appError.StatusCode;
-
-        var responseBody = JsonSerializer.Serialize(response);
-
-        await context.Response.WriteAsync(responseBody);
+        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 }

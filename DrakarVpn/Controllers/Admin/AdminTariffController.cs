@@ -1,4 +1,6 @@
 ﻿using DrakarVpn.Core.AbstractsServices.Tariffs;
+using DrakarVpn.Core.Services.Logging;
+using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Tariffs;
 using DrakarVpn.Shared.Constants.Errors;
 using Microsoft.AspNetCore.Authorization;
@@ -6,9 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DrakarVpn.API.Controllers.Admin;
 
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 [Route("api/admin/tariffs")]
 [ApiController]
+[SetLogSource(SystemLogSource.Tariff)]
 public class AdminTariffController : WrapperController
 {
     private readonly ITariffService tariffService;

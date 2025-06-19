@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DrakarVpn.API.Controllers.User;
 
 [Route("api/user/[controller]")]
+[SetLogSource(SystemLogSource.Auth)]
 public class AuthController : WrapperController
 {
     private readonly IAuthService service;
@@ -28,12 +29,7 @@ public class AuthController : WrapperController
         if (registerRequestDto == null)
             return Error(AppErrors.ObjectIsNull);
 
-        var serviceResult = await LogHelper.CatchAndLogAsync(
-            () => service.RegisterUserAsync(registerRequestDto),
-            logService,
-            SystemLogSource.Auth,
-            "RegisterUserAsync failed"
-        );
+        var serviceResult = await service.RegisterUserAsync(registerRequestDto);
 
         if (serviceResult.IsSuccess)
         {
@@ -52,12 +48,7 @@ public class AuthController : WrapperController
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
     {
-        var serviceResult = await LogHelper.CatchAndLogAsync(
-            () => service.LoginUserAsync(loginRequestDto),
-            logService,
-            SystemLogSource.Auth,
-            "LoginUserAsync failed"
-        );
+        var serviceResult = await service.LoginUserAsync(loginRequestDto);
 
         if (serviceResult.IsSuccess)
         {
