@@ -26,15 +26,15 @@ public class UserVpnDeviceController : WrapperController
     public async Task<IActionResult> GetDevices()
     {
         var userId = GetCurrentUserId();
-        var result = await deviceService.GetDevicesForUserAsync(userId);
+        var result = await deviceService.GetDevicesWithConfigAsync(userId);
         return Ok(CreateSuccessResponse(result));
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateDevice([FromBody] UserVpnDeviceRequestDto dto)
+    public async Task<IActionResult> CreateDevice([FromBody] UserVpnDeviceCreateDto dto)
     {
         var userId = GetCurrentUserId();
-        var result = await deviceService.CreateDeviceAsync(userId, dto);
+        await deviceService.CreateDeviceAsync(userId, dto);
 
         await logService.LogUserActionAsync(
             userId,
@@ -42,7 +42,7 @@ public class UserVpnDeviceController : WrapperController
             $"DeviceName: {dto.DeviceName}"
         );
 
-        return Ok(CreateSuccessResponse(result));
+        return Ok(CreateSuccessResponse("Device created"));
     }
 
     [HttpDelete("{id}")]

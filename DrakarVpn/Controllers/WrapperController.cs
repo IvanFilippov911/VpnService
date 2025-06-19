@@ -53,6 +53,12 @@ public class WrapperController : ControllerBase
         return userId;
     }
 
+    protected IActionResult Error(AppError error)
+    {
+        return StatusCode((int)error.StatusCode,
+            CreateErrorResponse<object>(error));
+    }
+
 
 }
 

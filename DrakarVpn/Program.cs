@@ -26,7 +26,7 @@ public class Program
         services.AddBackgroundWorkers();
         services.AddMongoLogging(builder.Configuration);
         services.AddCustomCors();
-
+        services.AddCustomAutoMapper();
 
         var app = builder.Build();
 

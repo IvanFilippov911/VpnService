@@ -4,8 +4,8 @@ namespace DrakarVpn.Core.AbstractsServices.UserVpnDevice;
 
 public interface IUserVpnDeviceService
 {
-    Task<List<UserVpnDeviceRequestDto>> GetDevicesForUserAsync(string userId);
-    Task<UserVpnDeviceResponseDto> CreateDeviceAsync(string userId, UserVpnDeviceRequestDto dto);
+    Task<UserVpnDeviceListWithLimitDto> GetDevicesWithConfigAsync(string userId);
+    Task CreateDeviceAsync(string userId, UserVpnDeviceCreateDto dto);
     Task<string?> DeleteDeviceAsync(Guid deviceId);
 }
 

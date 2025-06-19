@@ -11,6 +11,7 @@ using DrakarVpn.Core.AbstractsServices.Subscriptions;
 using DrakarVpn.Core.AbstractsServices.Tariffs;
 using DrakarVpn.Core.AbstractsServices.Users;
 using DrakarVpn.Core.AbstractsServices.UserVpnDevice;
+using DrakarVpn.Core.MappingProfiles;
 using DrakarVpn.Core.Services.Auth;
 using DrakarVpn.Core.Services.Logging;
 using DrakarVpn.Core.Services.Subscriptions;
@@ -63,6 +64,12 @@ public static class ServiceCollectionExtensions
             });
         });
 
+        return services;
+    }
+
+    public static IServiceCollection AddCustomAutoMapper(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(UserVpnDeviceMappingProfile).Assembly);
         return services;
     }
 }

@@ -14,37 +14,33 @@ public class UserVpnDeviceService : IUserVpnDeviceService
     private readonly IUserVpnDeviceRepository deviceRepo;
     private readonly ISubscriptionRepository subscriptionRepository;
     private readonly IPeerService peerService;
-    private readonly IMapper mapper;
+    private readonly IServiceProvider serviceProvider;
     private readonly IWireGuardClientConfigGenerator configGenerator;
+    private IMapper mapper;
 
     public UserVpnDeviceService(
         IUserVpnDeviceRepository deviceRepo,
         ISubscriptionRepository subscriptionRepository,
         IPeerService peerService,
+        IServiceProvider serviceProvider,
         IMapper mapper,
         IWireGuardClientConfigGenerator configGenerator)
     {
         this.deviceRepo = deviceRepo;
         this.subscriptionRepository = subscriptionRepository;
         this.peerService = peerService;
-        this.mapper = mapper;
+        this.serviceProvider = serviceProvider;
         this.configGenerator = configGenerator;
+        this.mapper = mapper;
     }
 
-    public async Task<List<UserVpnDeviceRequestDto>> GetDevicesForUserAsync(string userId)
-    {
-        var devices = await deviceRepo.GetAllByUserIdAsync(userId);
-        return mapper.Map<List<UserVpnDeviceRequestDto>>(devices);
-    }
-
-    public async Task<UserVpnDeviceResponseDto> CreateDeviceAsync(string userId, UserVpnDeviceRequestDto dto)
+    public async Task CreateDeviceAsync(string userId, UserVpnDeviceCreateDto dto)
     {
         var sub = await subscriptionRepository.GetActiveSubscriptionByUserIdAsync(userId)
             ?? throw new Exception("No active subscription");
 
-        var maxDevices = sub.Tariff.MaxDevices;
         var currentCount = await deviceRepo.CountByUserIdAsync(userId);
-        if (currentCount >= maxDevices)
+        if (currentCount >= sub.Tariff.MaxDevices)
             throw new Exception("Device limit reached");
 
         var peerResult = await peerService.AddPeerAsync(userId, dto.PublicKey);
@@ -55,18 +51,32 @@ public class UserVpnDeviceService : IUserVpnDeviceService
             UserId = userId,
             PeerId = peerResult.PeerId,
             DeviceName = dto.DeviceName,
+            AssignedIp = peerResult.AssignedIp,
             CreatedAt = DateTime.UtcNow
         };
 
         await deviceRepo.AddAsync(device);
+    }
 
-        return new UserVpnDeviceResponseDto
+    public async Task<UserVpnDeviceListWithLimitDto> GetDevicesWithConfigAsync(string userId)
+    {
+        var devices = await deviceRepo.GetAllByUserIdAsync(userId);
+        var serverInfo = configGenerator.GetConfig();
+
+        var mappedDevices = mapper.Map<List<UserVpnDeviceResultDto>>(devices, opt =>
         {
-            DeviceId = device.Id,
-            DeviceName = device.DeviceName,
-            CreatedAt = device.CreatedAt,
-            AssignedIp = peerResult.AssignedIp,
-            ServerConfig = configGenerator.GetConfig()
+            opt.Items["ServiceProvider"] = serviceProvider;
+        });
+
+        var maxDevices = 0; 
+        var subscription = await subscriptionRepository.GetActiveSubscriptionByUserIdAsync(userId);
+        if (subscription != null)
+            maxDevices = subscription.Tariff.MaxDevices;
+
+        return new UserVpnDeviceListWithLimitDto
+        {
+            Devices = mappedDevices,
+            MaxDevices = maxDevices
         };
     }
 
@@ -82,6 +92,4 @@ public class UserVpnDeviceService : IUserVpnDeviceService
 
         return device.DeviceName;
     }
-
 }
-

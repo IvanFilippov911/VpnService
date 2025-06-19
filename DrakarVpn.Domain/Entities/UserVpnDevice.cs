@@ -14,6 +14,7 @@ public class UserVpnDevice
 
     public Guid PeerId { get; set; }              
     public bool IsActive { get; set; } = true;
+    public string AssignedIp { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
