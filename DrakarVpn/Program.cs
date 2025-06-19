@@ -25,6 +25,8 @@ public class Program
         services.AddWireGuardConfigServices(builder.Configuration);
         services.AddBackgroundWorkers();
         services.AddMongoLogging(builder.Configuration);
+        services.AddCustomCors();
+
 
         var app = builder.Build();
 
@@ -36,7 +38,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
-
+        app.UseCors("AllowAll");
         app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseHttpsRedirection();
         app.UseAuthorization();
