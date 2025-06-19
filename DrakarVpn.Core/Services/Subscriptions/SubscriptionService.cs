@@ -33,21 +33,40 @@ public class SubscriptionService : ISubscriptionService
     {
         var tariff = await tariffRepository.GetTariffByIdAsync(dto.TariffId);
         if (tariff == null)
-        {
             throw new Exception("Invalid Tariff");
-        }
 
         var existingSubscription = await subscriptionRepository.GetActiveSubscriptionByUserIdAsync(userId);
+
         if (existingSubscription != null)
         {
-            existingSubscription.ExpiresAt = existingSubscription.ExpiresAt > DateTime.UtcNow
-                ? existingSubscription.ExpiresAt.AddDays(tariff.DurationInDays)
-                : DateTime.UtcNow.AddDays(tariff.DurationInDays);
+            if (existingSubscription.TariffId == tariff.Id)
+            {
+                existingSubscription.ExpiresAt = existingSubscription.ExpiresAt > DateTime.UtcNow
+                    ? existingSubscription.ExpiresAt.AddDays(tariff.DurationInDays)
+                    : DateTime.UtcNow.AddDays(tariff.DurationInDays);
 
-            existingSubscription.IsAutoRenew = dto.EnableAutoRenew;
-            existingSubscription.IsActive = true;
+                existingSubscription.IsAutoRenew = dto.EnableAutoRenew;
+                existingSubscription.IsActive = true;
 
-            await subscriptionRepository.UpdateSubscriptionAsync(existingSubscription);
+                await subscriptionRepository.UpdateSubscriptionAsync(existingSubscription);
+            }
+            else
+            {
+                existingSubscription.IsActive = false;
+                await subscriptionRepository.UpdateSubscriptionAsync(existingSubscription);
+
+                var newSubscription = new Subscription
+                {
+                    UserId = userId,
+                    TariffId = tariff.Id,
+                    PurchasedAt = DateTime.UtcNow,
+                    ExpiresAt = DateTime.UtcNow.AddDays(tariff.DurationInDays),
+                    IsAutoRenew = dto.EnableAutoRenew,
+                    IsActive = true
+                };
+
+                await subscriptionRepository.AddSubscriptionAsync(newSubscription);
+            }
         }
         else
         {
@@ -64,6 +83,7 @@ public class SubscriptionService : ISubscriptionService
             await subscriptionRepository.AddSubscriptionAsync(newSubscription);
         }
     }
+
 
     public async Task DeactivateMySubscriptionAsync(string userId)
     {

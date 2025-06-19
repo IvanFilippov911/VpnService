@@ -71,14 +71,17 @@ public class UserVpnDeviceService : IUserVpnDeviceService
     }
 
 
-    public async Task<bool> DeleteDeviceAsync(Guid deviceId)
+    public async Task<string?> DeleteDeviceAsync(Guid deviceId)
     {
         var device = await deviceRepo.GetByIdAsync(deviceId);
-        if (device == null) return false;
+        if (device == null)
+            return null;
 
         await deviceRepo.DeleteAsync(deviceId);
         await peerService.RemovePeerByPeerIdAsync(device.PeerId);
-        return true;
+
+        return device.DeviceName;
     }
+
 }
 

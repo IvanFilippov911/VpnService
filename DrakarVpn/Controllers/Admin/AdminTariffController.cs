@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DrakarVpn.API.Controllers.Admin;
 
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 [Route("api/admin/tariffs")]
 [ApiController]
 public class AdminTariffController : WrapperController
@@ -51,5 +51,19 @@ public class AdminTariffController : WrapperController
     {
         var tariffs = await tariffService.FilterTariffsAsync(filter);
         return Ok(CreateSuccessResponse(tariffs));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTariffById(Guid id)
+    {
+        var tariff = await tariffService.GetTariffByIdAsync(id);
+
+        if (tariff == null)
+        {
+            return StatusCode((int)AppErrors.InvalidId.StatusCode,
+                CreateErrorResponse<object>(AppErrors.InvalidId));
+        }
+
+        return Ok(CreateSuccessResponse(tariff));
     }
 }

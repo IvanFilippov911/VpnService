@@ -20,17 +20,4 @@ public class TariffController : WrapperController
         return Ok(CreateSuccessResponse(tariffs));
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetTariffById(Guid id)
-    {
-        var tariff = await tariffService.GetTariffByIdAsync(id);
-
-        if (tariff == null)
-        {
-            return StatusCode((int)AppErrors.InvalidId.StatusCode,
-                CreateErrorResponse<object>(AppErrors.InvalidId));
-        }
-
-        return Ok(CreateSuccessResponse(tariff));
-    }
 }

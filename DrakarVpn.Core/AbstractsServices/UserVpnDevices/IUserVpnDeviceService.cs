@@ -6,6 +6,6 @@ public interface IUserVpnDeviceService
 {
     Task<List<UserVpnDeviceRequestDto>> GetDevicesForUserAsync(string userId);
     Task<UserVpnDeviceResponseDto> CreateDeviceAsync(string userId, UserVpnDeviceRequestDto dto);
-    Task<bool> DeleteDeviceAsync(Guid deviceId);
+    Task<string?> DeleteDeviceAsync(Guid deviceId);
 }
 

@@ -60,7 +60,8 @@ public class AuthService : IAuthService
         return ServiceResult<RegisterResponseDto>.Success(new RegisterResponseDto
         {
             Email = newAppUser.Email,
-            Role = newRoleAppUser
+            Role = newRoleAppUser,
+            UserId = newAppUser.Id,
         });
 
     }
@@ -82,7 +83,8 @@ public class AuthService : IAuthService
         var result = new LoginResponseDto
         {
             Email = userFromDb.Email,
-            Token = token
+            Token = token,
+            UserId = userFromDb.Id,
         };
 
         return ServiceResult<LoginResponseDto>.Success(result);

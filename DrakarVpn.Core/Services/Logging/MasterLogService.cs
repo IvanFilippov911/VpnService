@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DrakarVpn.Core.AbstractsRepositories.Logging;
 using DrakarVpn.Domain.Entities.Logging;
+using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Logging;
 
 namespace DrakarVpn.Core.Services.Logging;
@@ -16,17 +17,18 @@ public class MasterLogService : IMasterLogService
         this.mapper = mapper;
     }
 
-    public async Task LogUserActionAsync(string userId, string actionType, string metadata = "")
+    public async Task LogUserActionAsync(string userId, UserActionType actionType, string metadata = "")
     {
         var entry = new UserActionLogEntry
         {
             UserId = userId,
-            ActionType = actionType,
+            ActionType = actionType.ToString(),
             Metadata = metadata
         };
 
         await mongoRepo.AddUserLogAsync(entry);
     }
+
 
     public async Task<List<UserLogDto>> GetUserLogsAsync(string userId)
     {
@@ -34,12 +36,15 @@ public class MasterLogService : IMasterLogService
         return mapper.Map<List<UserLogDto>>(logs);
     }
 
-    public async Task LogSystemEventAsync(string source, string errorCode, string message, string? stackTrace = null)
+    public async Task LogSystemEventAsync(SystemLogSource source, 
+        SystemErrorCode errorCode, 
+        string message, 
+        string? stackTrace = null)
     {
         var entry = new SystemLogEntry
         {
-            Source = source,
-            ErrorCode = errorCode,
+            Source = source.ToString(),
+            ErrorCode = errorCode.ToString(),
             Message = message,
             StackTrace = stackTrace
         };

@@ -6,4 +6,5 @@ public class SubscriptionMyDto
     public DateTime ExpiresAt { get; set; }
     public bool IsAutoRenew { get; set; }
     public bool IsActive { get; set; }
+    public int MaxDevices { get; set; }
 }
