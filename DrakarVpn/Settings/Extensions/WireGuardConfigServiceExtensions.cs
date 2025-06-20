@@ -13,7 +13,7 @@ public static class WireGuardConfigServiceExtensions
         services.AddSingleton<IWireGuardClientConfigGenerator, WireGuardClientConfigGenerator>();
         services.AddHttpClient<IWireGuardManagementService, WireGuardManagementService>(client =>
         {
-            client.BaseAddress = new Uri("http://77.221.153.119:5000");
+            client.BaseAddress = new Uri("http://77.221.153.119:5002");
             client.Timeout = TimeSpan.FromSeconds(5); 
         });
 

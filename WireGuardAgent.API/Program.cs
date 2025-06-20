@@ -15,6 +15,11 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var services = builder.Services;
 
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.ListenAnyIP(5002);
+        });
+
         builder.Configuration
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();

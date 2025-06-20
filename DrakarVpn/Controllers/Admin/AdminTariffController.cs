@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DrakarVpn.API.Controllers.Admin;
 
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 [Route("api/admin/tariffs")]
 [ApiController]
 [SetLogSource(SystemLogSource.Tariff)]

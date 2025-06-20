@@ -9,4 +9,6 @@ public interface IUserVpnDeviceRepository
     Task AddAsync(UserVpnDevice device);
     Task DeleteAsync(Guid id);
     Task<int> CountByUserIdAsync(string userId);
+    Task<UserVpnDevice?> FindByPublicKeyAsync(string publicKey);
+
 }

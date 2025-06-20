@@ -43,11 +43,14 @@ public class UserVpnDeviceService : IUserVpnDeviceService
         if (currentCount >= sub.Tariff.MaxDevices)
             throw new Exception("Device limit reached");
 
+        var existingDevice = await deviceRepo.FindByPublicKeyAsync(dto.PublicKey);
+        if (existingDevice != null)
+            throw new Exception("Device with the same public key already exists");
+
         var peerResult = await peerService.AddPeerAsync(userId, dto.PublicKey);
 
         var device = new UserVpnDevice
         {
-            Id = Guid.NewGuid(),
             UserId = userId,
             PeerId = peerResult.PeerId,
             DeviceName = dto.DeviceName,

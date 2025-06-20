@@ -44,5 +44,18 @@ public class UserVpnDeviceRepository : IUserVpnDeviceRepository
     {
         return await dbContext.UserVpnDevices.CountAsync(d => d.UserId == userId);
     }
+
+    public async Task<UserVpnDevice?> FindByPublicKeyAsync(string publicKey)
+    {
+        var peer = await dbContext.Peers
+            .FirstOrDefaultAsync(p => p.PublicKey == publicKey && p.IsActive);
+
+        if (peer == null)
+            return null;
+
+        return await dbContext.UserVpnDevices
+            .FirstOrDefaultAsync(d => d.PeerId == peer.Id && d.IsActive);
+    }
+
 }
 

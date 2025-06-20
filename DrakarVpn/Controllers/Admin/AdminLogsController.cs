@@ -8,7 +8,7 @@ namespace DrakarVpn.API.Controllers.Admin;
 
 [ApiController]
 [Route("api/admin/logs")]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 [SetLogSource(SystemLogSource.Logging)]
 public class AdminLogsController : WrapperController
 {

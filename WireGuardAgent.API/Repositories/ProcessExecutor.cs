@@ -1,33 +1,38 @@
 ﻿using System.Diagnostics;
 using WireGuardAgent.API.AbstractsRepositories;
+using WireGuardAgent.API.models;
 
 namespace WireGuardAgent.API.Repositories;
 
 public class ProcessExecutor : IProcessExecutor
 {
-    public void Execute(string command, string args)
+    public ProcessResult ExecuteWithOutput(string fileName, string arguments)
     {
-        var psi = new ProcessStartInfo
+        var process = new Process
         {
-            FileName = command,
-            Arguments = args,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
         };
 
-        using (var process = Process.Start(psi))
+        process.Start();
+
+        var stdout = process.StandardOutput.ReadToEnd();
+        var stderr = process.StandardError.ReadToEnd();
+
+        process.WaitForExit();
+
+        return new ProcessResult
         {
-            if (process == null) throw new Exception($"Failed to start process {command}");
-
-            process.WaitForExit();
-
-            if (process.ExitCode != 0)
-            {
-                var error = process.StandardError.ReadToEnd();
-                throw new Exception($"Process {command} failed. ExitCode={process.ExitCode}. Error={error}");
-            }
-        }
+            ExitCode = process.ExitCode,
+            StandardOutput = stdout,
+            StandardError = stderr
+        };
     }
 }

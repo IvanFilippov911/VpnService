@@ -26,46 +26,46 @@ public class PeerService : IPeerService
     }
 
     public async Task<PeerAllocationResult> AddPeerAsync(string userId, string publicKey)
-{
-    var assignedIp = await ipAllocator.AllocateNextIpAsync();
-
-    var wgPeerInfo = new WireGuardPeerInfo
     {
-        PublicKey = publicKey,
-        AllowedIp = assignedIp
-    };
+        var assignedIp = await ipAllocator.AllocateNextIpAsync();
 
-    await using var tx = await peerRepository.BeginTransactionAsync();
-
-    try
-    {
-        await wireGuardManagementService.AddPeerAsync(wgPeerInfo);
-
-        var peer = new Peer
+        var wgPeerInfo = new WireGuardPeerInfo
         {
-            Id = Guid.NewGuid(),
-            UserId = userId,
             PublicKey = publicKey,
-            AssignedIP = assignedIp,
-            CreatedAt = DateTime.UtcNow,
-            IsActive = true
+            AllowedIp = assignedIp
         };
 
-        await peerRepository.AddPeerAsync(peer);
-        await tx.CommitAsync();
+        await using var tx = await peerRepository.BeginTransactionAsync();
 
-        return new PeerAllocationResult
+        try
         {
-            PeerId = peer.Id,
-            AssignedIp = assignedIp
-        };
+            await wireGuardManagementService.AddPeerAsync(wgPeerInfo);
+
+            var peer = new Peer
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                PublicKey = publicKey,
+                AssignedIP = assignedIp,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            await peerRepository.AddPeerAsync(peer);
+            await tx.CommitAsync();
+
+            return new PeerAllocationResult
+            {
+                PeerId = peer.Id,
+                AssignedIp = assignedIp
+            };
+        }
+        catch
+        {
+            await tx.RollbackAsync();
+            throw;
+        }
     }
-    catch
-    {
-        await tx.RollbackAsync();
-        throw;
-    }
-}
 
 
     public async Task RemovePeerByPeerIdAsync(Guid peerId)

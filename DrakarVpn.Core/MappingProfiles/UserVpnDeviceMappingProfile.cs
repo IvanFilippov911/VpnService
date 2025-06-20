@@ -12,22 +12,24 @@ public class UserVpnDeviceMappingProfile : Profile
     public UserVpnDeviceMappingProfile()
     {
         CreateMap<UserVpnDevice, UserVpnDeviceResultDto>()
-            .AfterMap((src, dest, ctx) =>
+        .ForMember(dest => dest.DeviceId, opt => opt.MapFrom(src => src.Id)) // 💥 ВОТ ЭТА СТРОКА ОБЯЗАТЕЛЬНА
+        .AfterMap((src, dest, ctx) =>
+        {
+            var provider = ctx.Items["ServiceProvider"] as IServiceProvider;
+            if (provider == null)
+                throw new InvalidOperationException("ServiceProvider not passed");
+
+            var configService = provider.GetRequiredService<IWireGuardClientConfigGenerator>();
+            var server = configService.GetConfig();
+
+            dest.ServerConfig = new WireGuardServerInfo
             {
-                var provider = ctx.Items["ServiceProvider"] as IServiceProvider;
-                if (provider == null)
-                    throw new InvalidOperationException("ServiceProvider not passed");
+                Endpoint = server.Endpoint,
+                PublicKey = server.PublicKey,
+                AllowedIPs = server.AllowedIPs,
+                PersistentKeepalive = server.PersistentKeepalive
+            };
+        });
 
-                var configService = provider.GetRequiredService<IWireGuardClientConfigGenerator>();
-                var server = configService.GetConfig();
-
-                dest.ServerConfig = new WireGuardServerInfo
-                {
-                    Endpoint = server.Endpoint,
-                    PublicKey = server.PublicKey,
-                    AllowedIPs = server.AllowedIPs,
-                    PersistentKeepalive = server.PersistentKeepalive
-                };
-            });
     }
 }

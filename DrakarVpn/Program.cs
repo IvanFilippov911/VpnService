@@ -30,6 +30,7 @@ public class Program
         services.AddMongoLogging(builder.Configuration);
         services.AddCustomCors();
         services.AddCustomAutoMapper();
+        services.AddSwaggerGenCustomConfig();
 
         var app = builder.Build();
 

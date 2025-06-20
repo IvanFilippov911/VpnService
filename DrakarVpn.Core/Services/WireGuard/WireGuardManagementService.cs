@@ -1,6 +1,7 @@
 ﻿using DrakarVpn.Core.AbstractsServices.WireGuard;
 using DrakarVpn.Domain.Models;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace DrakarVpn.Core.Services.WireGuard;
 
@@ -29,13 +30,21 @@ public class WireGuardManagementService : IWireGuardManagementService
 
     public async Task AddPeerAsync(WireGuardPeerInfo peerInfo)
     {
+        Console.WriteLine($"[WireGuardClient] AddPeerAsync started: {JsonSerializer.Serialize(peerInfo)}");
+
         var response = await httpClient.PostAsJsonAsync("/api/internal/wireguard/peers", peerInfo);
+
+        Console.WriteLine($"[WireGuardClient] StatusCode: {response.StatusCode}");
+
+        var content = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"[WireGuardClient] Response content: {content}");
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new ApplicationException($"Failed to add peer. StatusCode: {response.StatusCode}");
+            throw new ApplicationException($"Failed to add peer. StatusCode: {response.StatusCode}. Content: {content}");
         }
     }
+
 
     public async Task RemovePeerAsync(string publicKey)
     {

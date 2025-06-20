@@ -94,7 +94,7 @@ public class WireGuardConfigService : IWireGuardConfigService
 
             Console.WriteLine($"[WireGuardConfigService] Appending new peer block to {configFilePath}");
 
-            // Всегда просто Append → это правильно и безопасно
+            
             fileSystem.AppendAllLines(configFilePath, peerBlock);
 
             Console.WriteLine($"[WireGuardConfigService] Reloading WireGuard");
@@ -167,6 +167,21 @@ public class WireGuardConfigService : IWireGuardConfigService
 
     public void ReloadWireGuard()
     {
-        processExecutor.Execute("/bin/bash", "-c \"sudo systemctl restart wg-quick@wg0\"");
+        Console.WriteLine("[WireGuardConfigService] ReloadWireGuard: restarting wg-quick@wg0");
+
+        var result = processExecutor.ExecuteWithOutput(
+            "/bin/bash",
+            "-c \"systemctl restart wg-quick@wg0\""
+        );
+
+        Console.WriteLine($"[WireGuardConfigService] ReloadWireGuard exit code: {result.ExitCode}");
+        Console.WriteLine($"[WireGuardConfigService] STDOUT:\n{result.StandardOutput}");
+        Console.WriteLine($"[WireGuardConfigService] STDERR:\n{result.StandardError}");
+
+        if (result.ExitCode != 0)
+        {
+            throw new Exception($"Failed to restart wg-quick@wg0. Exit code: {result.ExitCode}");
+        }
     }
+
 }

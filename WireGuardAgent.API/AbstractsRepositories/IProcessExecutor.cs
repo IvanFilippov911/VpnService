@@ -1,6 +1,9 @@
-﻿namespace WireGuardAgent.API.AbstractsRepositories;
+﻿using WireGuardAgent.API.models;
+
+namespace WireGuardAgent.API.AbstractsRepositories;
 
 public interface IProcessExecutor
 {
-    void Execute(string command, string args);
+    ProcessResult ExecuteWithOutput(string fileName, string arguments);
+
 }
