@@ -6,6 +6,6 @@ public interface IWireGuardConfigService
 {
     List<WireGuardPeerInfo> GetCurrentPeers();
     void AddPeer(WireGuardPeerInfo peerInfo);
-    void RemovePeer(string publicKey);
+    bool RemovePeer(string publicKey);
     void ReloadWireGuard();
 }

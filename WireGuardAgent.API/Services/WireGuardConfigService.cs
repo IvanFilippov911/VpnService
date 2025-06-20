@@ -105,65 +105,83 @@ public class WireGuardConfigService : IWireGuardConfigService
         }
     }
 
-    public void RemovePeer(string publicKey)
+    public bool RemovePeer(string publicKey)
     {
         lock (fileLock)
         {
             if (!fileSystem.FileExists(configFilePath))
             {
-                Console.WriteLine($"[WireGuardConfigService] Config file not found when trying to remove peer: {configFilePath}");
-                return;
+                Console.WriteLine($"[WireGuardConfigService] Config file not found: {configFilePath}");
+                return false;
             }
 
             var lines = fileSystem.ReadAllLines(configFilePath).ToList();
             var newLines = new List<string>();
 
             bool inPeerBlock = false;
-            bool skipBlock = false;
+            bool peerFound = false;
+
+            var tempBlock = new List<string>();
 
             foreach (var line in lines)
             {
                 if (line.Trim() == "[Peer]")
                 {
+                    if (tempBlock.Count > 0)
+                    {
+                        newLines.AddRange(tempBlock);
+                        tempBlock.Clear();
+                    }
+
                     inPeerBlock = true;
-                    skipBlock = false;
-                    newLines.Add(line);
+                    tempBlock.Add(line); 
                 }
                 else if (inPeerBlock && line.StartsWith("PublicKey ="))
                 {
                     var pk = line.Split('=')[1].Trim();
                     if (pk == publicKey)
                     {
-                        skipBlock = true;
-                        continue;
+                        peerFound = true;
+                        inPeerBlock = false;
+                        tempBlock.Clear(); 
                     }
                     else
                     {
-                        newLines.Add(line);
+                        tempBlock.Add(line);
                     }
                 }
                 else if (inPeerBlock && line.StartsWith("["))
                 {
                     inPeerBlock = false;
-                    if (!skipBlock)
-                        newLines.Add(line);
-                    else
-                        skipBlock = false;
+                    tempBlock.Add(line);
                 }
                 else
                 {
-                    if (!skipBlock)
-                        newLines.Add(line);
+                    tempBlock.Add(line);
                 }
             }
 
+            if (tempBlock.Count > 0)
+            {
+                newLines.AddRange(tempBlock);
+            }
+
+            if (!peerFound)
+            {
+                Console.WriteLine($"[WireGuardConfigService] Peer with publicKey={publicKey} not found in config.");
+                return false;
+            }
+
+            Console.WriteLine($"[WireGuardConfigService] Peer found. Writing updated config...");
             fileSystem.WriteAllLines(configFilePath, newLines);
 
-            Console.WriteLine($"[WireGuardConfigService] Reloading WireGuard after peer removal");
-
             ReloadWireGuard();
+
+            return true;
         }
     }
+
+
 
     public void ReloadWireGuard()
     {

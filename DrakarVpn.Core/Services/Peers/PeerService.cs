@@ -5,6 +5,7 @@ using DrakarVpn.Core.AbstractsServices.WireGuard;
 using DrakarVpn.Domain.Entities;
 using DrakarVpn.Domain.ModelDto.Peers;
 using DrakarVpn.Domain.Models;
+using DrakarVpn.Domain.Models.Pagination;
 
 public class PeerService : IPeerService
 {
@@ -93,20 +94,30 @@ public class PeerService : IPeerService
         }
     }
 
-    public async Task<List<PeerDto>> GetAllPeersAsync(bool onlyActive = false)
+    public async Task<PagedResult<PeerDto>> GetAllPeersAsync(bool onlyActive = false, int offset = 0, int limit = 50)
     {
-        var peers = await peerRepository.GetAllPeersAsync(onlyActive);
-        return mapper.Map<List<PeerDto>>(peers);
+        var (peers, totalCount) = await peerRepository.GetAllPeersPagedAsync(onlyActive, offset, limit);
+
+        return new PagedResult<PeerDto>
+        {
+            Items = mapper.Map<List<PeerDto>>(peers),
+            TotalCount = totalCount,
+        };
+    }
+
+    public async Task<PagedResult<PeerDto>> GetPeersByFilterAsync(PeerFilterDto filter)
+    {
+        var (peers, totalCount) = await peerRepository.GetPeersByFilterPagedAsync(filter);
+
+        return new PagedResult<PeerDto>
+        {
+            Items = mapper.Map<List<PeerDto>>(peers),
+            TotalCount = totalCount,
+        };
     }
 
     public async Task<List<WireGuardPeerInfo>> GetWireGuardPeersAsync()
     {
         return await wireGuardManagementService.GetPeersAsync();
-    }
-
-    public async Task<List<PeerDto>> GetPeersByFilterAsync(PeerFilterDto filter)
-    {
-        var peers = await peerRepository.GetPeersByFilterAsync(filter);
-        return mapper.Map<List<PeerDto>>(peers);
     }
 }

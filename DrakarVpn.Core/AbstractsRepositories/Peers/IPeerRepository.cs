@@ -8,12 +8,15 @@ public interface IPeerRepository
 {
     Task<Peer?> GetActivePeerByUserIdAsync(string userId);
     Task AddPeerAsync(Peer peer);
-    Task<List<Peer>> GetAllPeersAsync(bool onlyActive = false);
     Task<Peer?> GetPeerByIdAsync(Guid peerId);
     Task MarkPeerAsInactiveAsync(Guid peerId);
-    Task<List<Peer>> GetPeersByFilterAsync(PeerFilterDto filter);
+    
 
     Task<IDbContextTransaction> BeginTransactionAsync();
+
+    Task<(List<Peer> Peers, int TotalCount)> GetAllPeersPagedAsync(bool onlyActive, int offset, int limit);
+    Task<(List<Peer> Peers, int TotalCount)> GetPeersByFilterPagedAsync(PeerFilterDto filter);
+
 }
 
 

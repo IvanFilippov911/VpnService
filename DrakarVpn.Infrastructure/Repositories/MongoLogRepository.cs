@@ -20,37 +20,29 @@ public class MongoLogRepository : IMongoLogRepository
         await db.UserLogs.InsertOneAsync(entry);
     }
 
-    public async Task<List<UserActionLogEntry>> GetUserLogsAsync(string userId)
+    public async Task<(List<UserActionLogEntry> Logs, int TotalCount)> GetUserLogsPagedAsync(string userId, int offset, int limit)
     {
         var filter = Builders<UserActionLogEntry>.Filter.Eq(x => x.UserId, userId);
-        return await db.UserLogs.Find(filter)
+
+        var totalCount = (int)await db.UserLogs.CountDocumentsAsync(filter);
+
+        var logs = await db.UserLogs.Find(filter)
             .SortByDescending(x => x.PerformedAt)
-            .Limit(100)
+            .Skip(offset)
+            .Limit(limit)
             .ToListAsync();
+
+        return (logs, totalCount);
     }
+
 
     public async Task AddSystemLogAsync(SystemLogEntry entry)
     {
         await db.SystemLogs.InsertOneAsync(entry);
     }
 
-    public async Task<List<SystemLogEntry>> GetSystemLogsAsync(string? source = null, string? errorCode = null)
-    {
-        var filter = Builders<SystemLogEntry>.Filter.Empty;
 
-        if (!string.IsNullOrEmpty(source))
-            filter &= Builders<SystemLogEntry>.Filter.Eq(x => x.Source, source);
-
-        if (!string.IsNullOrEmpty(errorCode))
-            filter &= Builders<SystemLogEntry>.Filter.Eq(x => x.ErrorCode, errorCode);
-
-        return await db.SystemLogs.Find(filter)
-            .SortByDescending(x => x.Timestamp)
-            .Limit(100)
-            .ToListAsync();
-    }
-
-    public async Task<List<SystemLogEntry>> GetSystemLogsAsync(SystemLogFilterDto filter)
+    public async Task<(List<SystemLogEntry> Logs, int TotalCount)> GetSystemLogsPagedAsync(SystemLogFilterDto filter)
     {
         var builder = Builders<SystemLogEntry>.Filter;
         var mongoFilter = builder.Empty;
@@ -67,10 +59,16 @@ public class MongoLogRepository : IMongoLogRepository
         if (filter.To.HasValue)
             mongoFilter &= builder.Lte(x => x.Timestamp, filter.To.Value);
 
-        return await db.SystemLogs.Find(mongoFilter)
+        var totalCount = (int)await db.SystemLogs.CountDocumentsAsync(mongoFilter);
+
+        var logs = await db.SystemLogs.Find(mongoFilter)
             .SortByDescending(x => x.Timestamp)
-            .Limit(100)
+            .Skip(filter.Offset)
+            .Limit(filter.Limit)
             .ToListAsync();
+
+        return (logs, totalCount);
     }
+
 
 }

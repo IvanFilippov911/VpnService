@@ -41,53 +41,45 @@ public class PeerRepository : IPeerRepository
     }
 
 
-    public async Task<List<Peer>> GetAllPeersAsync(bool onlyActive = false)
-    {
-        if (onlyActive)
-        {
-            return await dbContext.Peers.Where(p => p.IsActive).ToListAsync();
-        }
-        else
-        {
-            return await dbContext.Peers.ToListAsync();
-        }
-    }
-
-    public async Task<List<Peer>> GetPeersByFilterAsync(PeerFilterDto filter)
+    public async Task<(List<Peer> Peers, int TotalCount)> GetAllPeersPagedAsync(bool onlyActive, int offset, int limit)
     {
         var query = dbContext.Peers.AsQueryable();
 
-        if (filter.IsActive.HasValue)
-        {
-            query = query.Where(p => p.IsActive == filter.IsActive.Value);
-        }
+        if (onlyActive)
+            query = query.Where(p => p.IsActive);
 
-        if (!string.IsNullOrWhiteSpace(filter.UserId))
-        {
-            query = query.Where(p => p.UserId == filter.UserId);
-        }
+        var totalCount = await query.CountAsync();
 
-        if (!string.IsNullOrEmpty(filter.AssignedIp))
-        {
-            query = query.Where(p => p.AssignedIP == filter.AssignedIp);
-        }
-
-        if (filter.CreatedAfter.HasValue)
-        {
-            query = query.Where(p => p.CreatedAt >= filter.CreatedAfter.Value);
-        }
-
-        if (filter.CreatedBefore.HasValue)
-        {
-            query = query.Where(p => p.CreatedAt <= filter.CreatedBefore.Value);
-        }
-
-        return await query
+        var peers = await query
             .OrderByDescending(p => p.CreatedAt)
-            .Skip((filter.Page - 1) * filter.PageSize)
-            .Take(filter.PageSize)
+            .Skip(offset)
+            .Take(limit)
             .ToListAsync();
+
+        return (peers, totalCount);
     }
+
+    public async Task<(List<Peer> Peers, int TotalCount)> GetPeersByFilterPagedAsync(PeerFilterDto filter)
+    {
+        var query = dbContext.Peers.AsQueryable();
+
+        if (!string.IsNullOrEmpty(filter.UserId))
+            query = query.Where(p => p.UserId == filter.UserId);
+
+        if (filter.IsActive.HasValue)
+            query = query.Where(p => p.IsActive == filter.IsActive);
+
+        var totalCount = await query.CountAsync();
+
+        var peers = await query
+            .OrderByDescending(p => p.CreatedAt)
+            .Skip(filter.Offset)
+            .Take(filter.Limit)
+            .ToListAsync();
+
+        return (peers, totalCount);
+    }
+
 
     public async Task<IDbContextTransaction> BeginTransactionAsync()
     {

@@ -3,6 +3,7 @@ using DrakarVpn.Core.AbstractsRepositories.Logging;
 using DrakarVpn.Domain.Entities.Logging;
 using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Logging;
+using DrakarVpn.Domain.Models.Pagination;
 
 namespace DrakarVpn.Core.Services.Logging;
 
@@ -30,11 +31,18 @@ public class MasterLogService : IMasterLogService
     }
 
 
-    public async Task<List<UserLogDto>> GetUserLogsAsync(string userId)
+    public async Task<PagedResult<UserLogDto>> GetUserLogsPagedAsync(string userId, int offset, int limit)
     {
-        var logs = await mongoRepo.GetUserLogsAsync(userId);
-        return mapper.Map<List<UserLogDto>>(logs);
+        var (logs, totalCount) = await mongoRepo.GetUserLogsPagedAsync(userId, offset, limit);
+
+        return new PagedResult<UserLogDto>
+        {
+            Items = mapper.Map<List<UserLogDto>>(logs),
+            TotalCount = totalCount,
+        };
     }
+
+
 
     public async Task LogSystemEventAsync(SystemLogSource source, 
         SystemErrorCode errorCode, 
@@ -52,9 +60,15 @@ public class MasterLogService : IMasterLogService
         await mongoRepo.AddSystemLogAsync(entry);
     }
 
-    public async Task<List<SystemLogDto>> GetSystemLogsAsync(SystemLogFilterDto filter)
+    public async Task<PagedResult<SystemLogDto>> GetSystemLogsAsync(SystemLogFilterDto filter)
     {
-        var logs = await mongoRepo.GetSystemLogsAsync(filter);
-        return mapper.Map<List<SystemLogDto>>(logs);
+        var (logs, totalCount) = await mongoRepo.GetSystemLogsPagedAsync(filter);
+
+        return new PagedResult<SystemLogDto>
+        {
+            Items = mapper.Map<List<SystemLogDto>>(logs),
+            TotalCount = totalCount,
+        };
     }
+
 }

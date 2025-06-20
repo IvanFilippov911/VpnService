@@ -1,6 +1,7 @@
 ﻿using DrakarVpn.Core.Services.Logging;
 using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Logging;
+using DrakarVpn.Domain.Models.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,10 +27,13 @@ public class AdminLogsController : WrapperController
         return Ok(CreateSuccessResponse(logs));
     }
 
-    [HttpGet("user")]
-    public async Task<IActionResult> GetUserLogs([FromQuery] string userId)
+
+    [HttpGet("my-actions")]
+    public async Task<IActionResult> GetMyActionHistory([FromQuery] PaginationQueryDto pagination)
     {
-        var logs = await logService.GetUserLogsAsync(userId);
-        return Ok(CreateSuccessResponse(logs));
+        var userId = GetCurrentUserId();
+        var result = await logService.GetUserLogsPagedAsync(userId, pagination.Offset, pagination.Limit);
+        return Ok(CreateSuccessResponse(result));
     }
+
 }

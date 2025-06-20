@@ -6,9 +6,8 @@ namespace DrakarVpn.Core.AbstractsRepositories.Logging;
 public interface IMongoLogRepository
 {
     Task AddUserLogAsync(UserActionLogEntry entry);
-    Task<List<UserActionLogEntry>> GetUserLogsAsync(string userId);
-
+    Task<(List<UserActionLogEntry> Logs, int TotalCount)> GetUserLogsPagedAsync(string userId, int offset, int limit);
     Task AddSystemLogAsync(SystemLogEntry entry);
-    Task<List<SystemLogEntry>> GetSystemLogsAsync(string? source = null, string? errorCode = null);
-    Task<List<SystemLogEntry>> GetSystemLogsAsync(SystemLogFilterDto filter);
+    Task<(List<SystemLogEntry> Logs, int TotalCount)> GetSystemLogsPagedAsync(SystemLogFilterDto filter);
+
 }

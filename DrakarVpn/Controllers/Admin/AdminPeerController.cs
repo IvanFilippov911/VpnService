@@ -2,7 +2,7 @@
 using DrakarVpn.Core.Services.Logging;
 using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Peers;
-using Microsoft.AspNetCore.Authorization;
+using DrakarVpn.Domain.Models.Pagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DrakarVpn.API.Controllers.Admin;
@@ -35,17 +35,20 @@ public class AdminPeerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPeers([FromQuery] bool onlyActive = false)
+    public async Task<IActionResult> GetAllPeers(
+    [FromQuery] PaginationQueryDto pagination,
+    [FromQuery] bool onlyActive = false)
     {
-        var peers = await peerService.GetAllPeersAsync(onlyActive);
-        return Ok(peers);
+        var result = await peerService.GetAllPeersAsync(onlyActive, pagination.Offset, pagination.Limit);
+        return Ok(result);
     }
 
     [HttpGet("filter")]
-    public async Task<IActionResult> GetPeersByFilter([FromQuery] PeerFilterDto filter)
+    public async Task<IActionResult> GetPeersByFilter(
+    [FromQuery] PeerFilterDto filter)
     {
-        var peers = await peerService.GetPeersByFilterAsync(filter);
-        return Ok(peers);
+        var result = await peerService.GetPeersByFilterAsync(filter);
+        return Ok(result);
     }
 
     [HttpGet("wireguard-peers")]

@@ -1,12 +1,13 @@
 ﻿using DrakarVpn.Domain.ModelDto.Users;
+using DrakarVpn.Domain.Models.Pagination;
 
 namespace DrakarVpn.Core.AbstractsServices.Users;
 
 public interface IUserService
 {
-    Task<List<UserListItemDto>> GetAllUsersAsync();
+    Task<PagedResult<UserListItemDto>> GetAllUsersPagedAsync(int offset, int limit);
     Task<UserDetailsDto?> GetUserByIdAsync(string userId);
-    Task<List<UserListItemDto>> FilterUsersAsync(UserFilterDto filter);
+    Task<PagedResult<UserListItemDto>> FilterUsersAsync(UserFilterDto filter);
     Task<UserProfileDto?> GetUserProfileAsync(string userId);
     Task<bool> UpdateUserProfileAsync(string userId, UserProfileDto dto);
 }

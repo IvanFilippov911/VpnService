@@ -1,5 +1,6 @@
 using DrakarVpn.API.Middleware;
 using DrakarVpn.API.Settings.Extensions;
+using DrakarVpn.Core.Validators;
 
 
 namespace DrakarVpn;
@@ -31,6 +32,11 @@ public class Program
         services.AddCustomCors();
         services.AddCustomAutoMapper();
         services.AddSwaggerGenCustomConfig();
+        services.AddControllers(options =>
+        {
+            options.Filters.Add<PaginationValidationFilter>();
+        });
+
 
         var app = builder.Build();
 

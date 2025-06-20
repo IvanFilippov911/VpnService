@@ -2,6 +2,7 @@
 using DrakarVpn.Core.Services.Logging;
 using DrakarVpn.Domain.Enums;
 using DrakarVpn.Domain.ModelDto.Users;
+using DrakarVpn.Domain.Models.Pagination;
 using DrakarVpn.Shared.Constants.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +23,13 @@ public class AdminUserController : WrapperController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllUsers()
+    public async Task<IActionResult> GetAllUsers([FromQuery] PaginationQueryDto pagination)
     {
-        var users = await userService.GetAllUsersAsync();
+        var users = await userService.GetAllUsersPagedAsync(pagination.Offset, pagination.Limit);
         return Ok(CreateSuccessResponse(users));
     }
+
+
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(string id)
@@ -48,4 +51,5 @@ public class AdminUserController : WrapperController
         var users = await userService.FilterUsersAsync(filter);
         return Ok(CreateSuccessResponse(users));
     }
+
 }

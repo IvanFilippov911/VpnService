@@ -33,7 +33,12 @@ public class PeersController : ControllerBase
     [HttpDelete("{publicKey}")]
     public IActionResult RemovePeer(string publicKey)
     {
-        wireGuardConfigService.RemovePeer(publicKey);
+        var removed = wireGuardConfigService.RemovePeer(publicKey);
+
+        if (!removed)
+            return NotFound($"Peer with publicKey={publicKey} not found.");
+
         return Ok();
     }
+
 }

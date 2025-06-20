@@ -15,9 +15,16 @@ public class UserRepository : IUserRepository
         this.dbContext = dbContext;
     }
 
-    public async Task<List<AppUser>> GetAllUsersAsync()
+    public async Task<(List<AppUser> Users, int TotalCount)> GetAllUsersPagedAsync(int offset, int limit)
     {
-        return await dbContext.Users.AsNoTracking().ToListAsync();
+        var query = dbContext.Users
+            .AsNoTracking()
+            .OrderByDescending(u => u.CreatedAt);
+
+        var totalCount = await query.CountAsync();
+        var users = await query.Skip(offset).Take(limit).ToListAsync();
+
+        return (users, totalCount);
     }
 
     public async Task<AppUser?> GetUserByIdAsync(string userId)
@@ -26,30 +33,30 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync(u => u.Id == userId);
     }
 
-    public async Task<List<AppUser>> FilterUsersAsync(UserFilterDto filter)
+    public async Task<(List<AppUser> Users, int TotalCount)> FilterUsersPagedAsync(UserFilterDto filter)
     {
         var query = dbContext.Users
-            .Include(u => u.Subscriptions) 
+            .Include(u => u.Subscriptions)
             .AsQueryable();
 
         if (!string.IsNullOrEmpty(filter.Email))
             query = query.Where(u => u.Email.Contains(filter.Email));
-        
+
         if (filter.IsVerified.HasValue)
             query = query.Where(u => u.IsVerified == filter.IsVerified.Value);
-        
+
         if (filter.IsBlocked.HasValue)
             query = query.Where(u => u.IsBlocked == filter.IsBlocked.Value);
 
         if (!string.IsNullOrEmpty(filter.Country))
             query = query.Where(u => u.Country == filter.Country);
-        
+
         if (filter.CreatedFrom.HasValue)
             query = query.Where(u => u.CreatedAt >= filter.CreatedFrom.Value);
-        
+
         if (filter.CreatedTo.HasValue)
             query = query.Where(u => u.CreatedAt <= filter.CreatedTo.Value);
-        
+
         if (filter.HasActiveSubscription.HasValue)
         {
             if (filter.HasActiveSubscription.Value)
@@ -60,8 +67,16 @@ public class UserRepository : IUserRepository
 
         if (filter.TariffId.HasValue)
             query = query.Where(u => u.Subscriptions.Any(s => s.IsActive && s.TariffId == filter.TariffId));
-        
-        return await query.AsNoTracking().ToListAsync();
+
+        var totalCount = await query.CountAsync();
+
+        var users = await query.AsNoTracking()
+            .OrderByDescending(u => u.CreatedAt)
+            .Skip(filter.Offset)
+            .Take(filter.Limit)
+            .ToListAsync();
+
+        return (users, totalCount);
     }
 
     public async Task<bool> UpdateUserProfileAsync(string userId, UserProfileDto dto)

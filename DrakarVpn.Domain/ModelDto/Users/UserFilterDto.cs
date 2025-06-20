@@ -1,6 +1,8 @@
-﻿namespace DrakarVpn.Domain.ModelDto.Users;
+﻿using DrakarVpn.Domain.Models.Pagination;
 
-public class UserFilterDto
+namespace DrakarVpn.Domain.ModelDto.Users;
+
+public class UserFilterDto : IPaginatable
 {
     public string? Email { get; set; }
     public bool? IsVerified { get; set; }
@@ -10,4 +12,7 @@ public class UserFilterDto
     public DateTime? CreatedTo { get; set; }
     public bool? HasActiveSubscription { get; set; }
     public Guid? TariffId { get; set; }
+
+    public int Offset { get; set; } = 0;  
+    public int Limit { get; set; } = 10;  
 }

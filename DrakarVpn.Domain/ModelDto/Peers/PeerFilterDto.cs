@@ -1,6 +1,8 @@
-﻿namespace DrakarVpn.Domain.ModelDto.Peers;
+﻿using DrakarVpn.Domain.Models.Pagination;
 
-public class PeerFilterDto
+namespace DrakarVpn.Domain.ModelDto.Peers;
+
+public class PeerFilterDto : IPaginatable
 {
     public bool? IsActive { get; set; }
     public string? UserId { get; set; }
@@ -8,8 +10,7 @@ public class PeerFilterDto
     public DateTime? CreatedAfter { get; set; }
     public DateTime? CreatedBefore { get; set; }
 
-    
-    public int Page { get; set; } = 1;
-    public int PageSize { get; set; } = 50;
+    public int Offset { get; set; } = 0;
+    public int Limit { get; set; } = 50;
 }
 

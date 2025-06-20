@@ -2,6 +2,7 @@
 using DrakarVpn.Core.AbstractsRepositories.Users;
 using DrakarVpn.Core.AbstractsServices.Users;
 using DrakarVpn.Domain.ModelDto.Users;
+using DrakarVpn.Domain.Models.Pagination;
 
 namespace DrakarVpn.Core.Services.Users;
 
@@ -16,11 +17,17 @@ public class UserService : IUserService
         this.mapper = mapper;
     }
 
-    public async Task<List<UserListItemDto>> GetAllUsersAsync()
+    public async Task<PagedResult<UserListItemDto>> GetAllUsersPagedAsync(int offset, int limit)
     {
-        var users = await userRepository.GetAllUsersAsync();
-        return mapper.Map<List<UserListItemDto>>(users);
+        var (users, totalCount) = await userRepository.GetAllUsersPagedAsync(offset, limit);
+
+        return new PagedResult<UserListItemDto>
+        {
+            Items = mapper.Map<List<UserListItemDto>>(users),
+            TotalCount = totalCount,
+        };
     }
+
 
     public async Task<UserDetailsDto?> GetUserByIdAsync(string userId)
     {
@@ -33,10 +40,15 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public async Task<List<UserListItemDto>> FilterUsersAsync(UserFilterDto filter)
+    public async Task<PagedResult<UserListItemDto>> FilterUsersAsync(UserFilterDto filter)
     {
-        var users = await userRepository.FilterUsersAsync(filter);
-        return mapper.Map<List<UserListItemDto>>(users);
+        var (users, totalCount) = await userRepository.FilterUsersPagedAsync(filter);
+
+        return new PagedResult<UserListItemDto>
+        {
+            Items = mapper.Map<List<UserListItemDto>>(users),
+            TotalCount = totalCount
+        };
     }
 
     public async Task<UserProfileDto?> GetUserProfileAsync(string userId)
